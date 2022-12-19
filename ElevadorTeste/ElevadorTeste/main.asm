@@ -25,7 +25,7 @@ reset:
 	.equ Botao_Abrir_Porta = PC4
 	.equ Botao_Fechar_Porta = PC5
 
-	.equ Botao_Terro_Externo = PD7
+	.equ Botao_Terreo_Externo = PD7
 	.equ Botao_Primeiro_Andar_Externo = PD6
 	.equ Botao_Segundo_Andar_Externo = PD5
 	.equ Botao_Terceiro_Andar_Externo = PD4
@@ -47,7 +47,7 @@ reset:
 	// Pinos PB3, PB2, PB1, PB0, da porta B, utilizados para configuração do CI CD4511
 	// Pino PB4 - Configurado como LED
 	// Pino PB6 - Configurado como Buzzer
-	ldi temp, 0b00001111
+	ldi temp, 0b00111111
 	out DDRB, temp
 	
 	// Inicia o Display com 0
@@ -65,29 +65,8 @@ reset:
 	ldi temp, 0b00000000
 	out DDRD, temp
 	
-	ldi temp, 0b11111111 ;Carrega 11111111 em temp
-	out PORTD, temp  // Habilita pull-up em PD7, PD6, PD5, PD4
-
-
-	/*ldi temp, 0b00000000 ;Carrega em temp 00000000
-	out DDRB, temp 
-
-	ldi temp, 0b11111100 ;Carrega em temp 11111100
-	out DDRD, temp ;Configura PORTD7 e PORTD6 como saída usadas pelo led e buzzer. 
-	;Configura PORTD5, PORTD4, PORTD3 e PORTD2 como saída usadas pelo CI
-
-	ldi temp, 0b00000000 ;Carrega em temp 00000000
-	out DDRC, temp ;Na porta C terá apenas botões
-
-	ldi temp, 0b00001111;Carrega 00001111 em temp
-	out PORTB, temp ;inicializa as portas PB4 (Buzzer) e PB3 (Led) em LOW, e habilita pull-up em PB3, PB2, PB1 e PB0
-
-	ldi temp, 0b00111111 ;Carrega 00111111 em temp
-	out PORTC, temp ;Habilita pull-up em PC5, PC4, PC3, PC2, PC1 e PC0
-	
-	;         0b00DCBA00
-	ldi temp, 0b00000000 ;Carrega 00000000 em temp
-	out PORTD, temp ;inicializa as portas PD5, PD4, PD3 e PD2 (CI) em LOW, mostrando um 0 no display de 7 segmentos*/
+	/*ldi temp, 0b11111111 ;Carrega 11111111 em temp
+	out PORTD, temp  // Habilita pull-up em PD7, PD6, PD5, PD4*/
 
 
 	// Definição Timer com 1 Segundo * Início *
@@ -116,10 +95,11 @@ reset:
 	// Definição Timer com 1 Segundo * Fim *
 
 	
-	ldi count, 0 //Inicializa Contador em 0
-	ldi status, parado //Inicializa status em 0
+	ldi count, 0           //Inicializa Contador em 0
+	ldi status, parado    //Inicializa status em 0
+	ldi andarAtual, 0    // Inicializa andarAtual em 0
 
-	rjmp main_lp
+	rjmp loop
 
 // Interrupção do timer, Sua função é incrementar o count a cada 1 segundo
 OCI1A_Interrupt:
@@ -148,7 +128,9 @@ debounce:
 	
 	ret
 
-main_lp:
+
+
+loop:
 	sei
 
 	sbic PINC, Botao_Terro_Interno   // Quando este botao for precionado aciona a rotina
@@ -158,12 +140,12 @@ main_lp:
 	rjmp Botao_Primeiro_Andar_Interno_Pressionado 
 
 	sbic PINC, Botao_Segundo_Andar_Interno  // Quando este botao for precionado aciona a rotina
-	rjmp Botao_Segundo_Andar_Interno_Pressionado 
+	rjmp Botao_Segundo_Andar_Interno_Pressionado
 
 	sbic PINC, Botao_Terceiro_Andar_Interno  // Quando este botao for precionado aciona a rotina
 	rjmp Botao_Terceiro_Andar_Interno_Pressionado
 
-	sbic PINC, Botao_Terro_Externo  // Quando este botao for precionado aciona a rotina
+	sbic PIND, Botao_Terreo_Externo  // Quando este botao for precionado aciona a rotina
 	rjmp Botao_Terreo_Externo_Pressionado 
 
 	sbic PIND, Botao_Primeiro_Andar_Externo // Quando este botao for precionado aciona a rotina
@@ -180,7 +162,6 @@ main_lp:
 
 	sbic PINC, Botao_Fechar_Porta  // Quando este botao for precionado aciona a rotina
 	jmp Botao_Fechar_Porta_Pressionado
-
 
 	cpi aguardando, 1  // Verifica se registrador 'aguardando' está ativado, Se sim, desvia para a rotina
 	breq aguardando1	
@@ -207,27 +188,27 @@ main_lp:
 	descendo1: // Pula para rotina de descendo
 	jmp Elevador_Descendo
 
-	rjmp main_lp
+	rjmp loop
 
 
 
 Botao_Terreo_Interno_Pressionado:
-	call debounce              // Chama o delay de 20ms
+	rcall debounce              // Chama o delay de 20ms
 	cbi PORTD, LED 
 	ldi temp, 0               // Define o Registrador 'temp', com o numero do andar pressionado
 	ldi terreo, 1            // Marca o registrador 'terreo' como chamada interna, Prioridade
 	cpi status, parado      // Verifica se o registrador 'status' está parado, se sim, aciona rotina 
 	breq Inicia_Elevador
-	rjmp main_lp          // Pula para o loop
+	rjmp loop          // Pula para o loop
 	
 
 Botao_Primeiro_Andar_Interno_Pressionado:
-	call debounce                 // Chama o delay de 20ms  
+	rcall debounce                 // Chama o delay de 20ms  
 	ldi temp, 1    			     // Define o Registrador 'temp', com o numero do andar pressionado
 	ldi primeiroAndar, 1	    // Marca o registrador 'primeiroAndar' como chamada interna, Prioridade
 	cpi status, parado  	   // Verifica se o registrador 'status' está parado, se sim, aciona rotina
 	breq Inicia_Elevador
-	rjmp main_lp 			 // Pula para o loop
+	rjmp loop 	
 
 
 Botao_Segundo_Andar_Interno_Pressionado:
@@ -236,8 +217,7 @@ Botao_Segundo_Andar_Interno_Pressionado:
 	ldi segundoAndar, 1		    // Marca o registrador 'segundoAndar' como chamada interna, Prioridade
 	cpi status, parado		   // Verifica se o registrador 'status' está parado, se sim, aciona rotina
 	breq Inicia_Elevador
-	rjmp main_lp			 // Pula para o loop
-
+	rjmp loop			 // Pula para o loop
 
 Botao_Terceiro_Andar_Interno_Pressionado:
 	call debounce                    // Chama o delay de 20ms
@@ -245,7 +225,8 @@ Botao_Terceiro_Andar_Interno_Pressionado:
 	ldi terceiroAndar, 1		   // Marca o registrador 'terceiroAndar' como chamada interna, Prioridade
 	cpi status, parado			  // Verifica se o registrador 'status' está parado, se sim, aciona rotina
 	breq Inicia_Elevador
-	rjmp main_lp				// Pula para o loop
+	rjmp loop				// Pula para o loop
+
 
 
 Botao_Terreo_Externo_Pressionado:
@@ -257,7 +238,7 @@ Botao_Terreo_Externo_Pressionado:
 	Continue_Terreo:
 	cpi status, parado     // Verifica se o registrador 'status' está parado, se sim, aciona rotina
 	breq Inicia_Elevador
-	rjmp main_lp         // Pula para o loop
+	rjmp loop         // Pula para o loop
 	
 
 Botao_Primeiro_Andar_Externo_Pressionado:
@@ -269,7 +250,7 @@ Botao_Primeiro_Andar_Externo_Pressionado:
 	Continue_Primeiro_Andar:
 	cpi status, parado			   // Verifica se o registrador 'status' está parado, se sim, aciona rotina
 	breq Inicia_Elevador
-	rjmp main_lp				 // Pula para o loop
+	rjmp loop				 // Pula para o loop
 
 
 Botao_Segundo_Andar_Externo_Pressionado:
@@ -281,7 +262,7 @@ Botao_Segundo_Andar_Externo_Pressionado:
 	Continue_Segundo_Andar:
 	cpi status, parado		     // Verifica se o registrador 'status' está parado, se sim, aciona rotina
 	breq Inicia_Elevador
-	rjmp main_lp			   // Pula para o loop
+	rjmp loop			   // Pula para o loop
 
 
 Botao_Terceiro_Andar_Externo_Pressionado:
@@ -293,17 +274,16 @@ Botao_Terceiro_Andar_Externo_Pressionado:
 	Continue_Terceiro_Andar:
 	cpi status, parado			  // Verifica se o registrador 'status' está parado, se sim, aciona rotina
 	breq Inicia_Elevador        
-	rjmp main_lp				// Pula para o loop
-
+	rjmp loop				// Pula para o loop
 
 
 Elevador_Parado:
 	ldi count, 0  // Seta o valor do registrador 'count' como 0
 	ldi status, parado // Seta o valor do registrador 'status' como Parado
-	jmp main_lp
+	jmp loop
 
 Inicia_Elevador:
-	ldi count, 0         // Seta o valor do registrador 'count' como 0
+	ldi count, 0         // Seta o valor do registrador 'count' como 0	
 
 	cp andarAtual, temp //Verifica se o valor do registrador 'andarAtual é IGUAL ao valor colocado em temp
 	breq igual         // Valor de tempo definido por qual botão foi apertado  
@@ -317,15 +297,15 @@ Inicia_Elevador:
 
 	igual:
 	ldi status, subindo // Se andaAtual for igual, mantem o status de 'MesmoAndar'
-	jmp main_lp
+	jmp loop
 
 	maior:
 	ldi status, descendo  // Se andaAtual for maior, define o status para 'descendo'
-	jmp main_lp
+	jmp loop
 
 	menor:
 	ldi status, subindo // Se andaAtual for menor, define o status para 'subindo'
-	jmp main_lp
+	jmp loop
 
 
 
@@ -343,22 +323,22 @@ Elevador_Aguardando:
 
 	cpi count, 10 // Quando se passarem 10 segundos e registrador 'aguardando' como 1,
 	breq Fechar_Porta // Chama rotina
-	jmp main_lp 
+	jmp loop 
 
 	Fechar_Porta:
 	cbi PORTB, LED          // Desliga o LED
 	cbi PORTB, BUZZER	   // Desliga BUZZER
 	ldi aguardando, 0     // Seta registrador 'aguardando' como 0
 	ldi count, 0         // Seta registrador 'count' como 0
-	jmp main_lp         // Pula para o loop
+	jmp loop         // Pula para o loop
 
 
 
 Elevador_subindo:
-	cpi count, 1   // Quando registrador 'count' = 3, aciona rotina
+	cpi count, 3  // Quando registrador 'count' = 3, aciona rotina
 	breq continue
 
-	jmp main_lp  // Pula para o loop
+	jmp loop  // Pula para o loop
 
 	continue: // Rotina acionada
 
@@ -370,10 +350,19 @@ Elevador_subindo:
 
 	cpi andarAtual, 2 // Caso andarAtual = Segundo Andar
 	breq Chegou_Terceiro_Andarl
-	jmp main_lp
 
+	cpi andarAtual, 3
+	breq Parou_no_Terceiro
+
+	jmp loop
+	
 	Chegou_Terceiro_Andarl: // Caso andarAtual = Segundo Andar
-	jmp Chegou_Terceiro_Andarl
+	jmp Chegou_Terceiro_Andar
+	 
+	Parou_no_Terceiro:   // Caso andarAtual = Terceiro Andar
+	jmp Parou_no_Terceiro1
+
+
 
 
 Chegou_Primeiro_Andar:
@@ -401,37 +390,38 @@ Chegou_Primeiro_Andar:
 	cpi terreo, 2 // Caso terro tenha sido pressionado como não prioridade
 	breq Descer_Terreo
 
-	inc andarAtual        // Incrementar o andar atual
+	dec andarAtual        // Incrementar o andar atual
 	ldi primeiroAndar, 0 // Define o registrador 'primeiroAndar' como não pressionado
 	ldi count, 0		   // Define o registrador 'count' como 0
 	jmp Elevador_Parado // Pula para elevador parado
 
 	Abrir_Primeiro_Andar:
 		ldi aguardando, 1        // Define o registrador 'aguardando' como 1
+		inc andarAtual        // Incrementar o andar atual
 		ldi primeiroAndar, 0    // Define o registrador 'primeiroAndar' como não pressionado
 		ldi count, 0           // Define o registrador 'count' como 0
 		ldi temp, 1           // Define o registrador 'temp' como 1
 		out PORTB, temp      // Mostra no display o valor 1
-		jmp main_lp         // Pula para o loop
+		jmp loop         // Pula para o loop
 	
 	Subir_Segundo_Andar:	
 		ldi count, 0             // Define o registrador 'count' como 0
 		inc andarAtual          // Incrementar o andar atual
 		out PORTB, andarAtual  // Mostra no display o valor 1
-		jmp main_lp           // Pula para o loop
+		jmp loop           // Pula para o loop
 
 	Subir_Terceiro_Andar:
 		ldi count, 0             // Define o registrador 'count' como 0
 		inc andarAtual          // Incrementar o andar atual
 		out PORTB, andarAtual  // Mostra no display o valor 1
-		jmp main_lp           // Pula para o loop
+		jmp loop           // Pula para o loop
 	
 	Descer_Terreo:
 		inc andarAtual          // Incrementar o andar atual
-		ldi count, 0		   // Define o registrador 'count' como 0
+		ldi count, 3		   // Define o registrador 'count' como 0
 		ldi primeiroAndar, 0   // Define o registrador 'primeiroAndar' como não pressionado
 		ldi status, descendo  // Define o registrador 'status' como descendo
-		jmp main_lp          // Pula para o loop
+		jmp loop          // Pula para o loop
 
 Chegou_Segundo_Andar:
 	
@@ -459,31 +449,32 @@ Chegou_Segundo_Andar:
 	cpi terreo, 2   // Caso terreo tenha sido pressionado como não prioridade
 	breq Descer_Elevador2
 
-	inc andarAtual		  // Incrementar o andar atual
+	dec andarAtual		  // Incrementar o andar atual
 	ldi segundoAndar, 0	 // Define o registrador 'segundoAndar' como não pressionado
 	ldi count, 0		   // Define o registrador 'count' como 0
 	jmp Elevador_Parado // Pula para elevador parado
 
 	Abrir_Segundo_Andar:
 		ldi aguardando, 1        // Define o registrador 'aguardando' como 1
+		inc andarAtual        // Incrementar o andar atual
 		ldi segundoAndar, 0	    // Define o registrador 'segundoAndar' como não pressionado
 		ldi count, 0		   // Define o registrador 'count' como 0
 		ldi temp, 2			  // Define o registrador 'temp' como 2
 		out PORTB, temp		 // Mostra no display o valor 2
-		jmp main_lp			// Pula para o loop
+		jmp loop			// Pula para o loop
 	
 	Subir_Terceiro_Andar2:
 		ldi count, 0		     // Define o registrador 'count' como 0
 		inc andarAtual		    // Incrementar o andar atual
 		out PORTB, andarAtual  // Mostra no display o valor 2
-		jmp main_lp           // Pula para o loop
+		jmp loop           // Pula para o loop
 	
 	Descer_Elevador2:
 		inc andarAtual		       // Incrementar o andar atual
-		ldi count, 0		      // Define o registrador 'count' como 0
+		ldi count, 3		      // Define o registrador 'count' como 0
 		ldi segundoAndar, 0	     // Define o registrador 'segundoAndar' como não pressionado
 		ldi status, descendo    // Define o registrador 'status' como descendo
-		jmp main_lp            // Pula para o loop
+		jmp loop            // Pula para o loop
 
 
 
@@ -512,7 +503,6 @@ Chegou_Terceiro_Andar:
 	cpi terreo, 2 // Caso terreo tenha sido pressionado como não prioridade
 	breq Descer_Elevador3
 
-	inc andarAtual		    // Incrementar o andar atual
 	ldi terceiroAndar,  0  // Define o registrador 'terceiroAndar' como não pressionado
 	ldi count, 0		   // Define o registrador 'count' como 0
 	jmp Elevador_Parado   // Pula para elevador parado
@@ -520,27 +510,58 @@ Chegou_Terceiro_Andar:
 
 	Abrir_Terceiro_Andar3:
 		ldi aguardando, 1	        // Define o registrador 'aguardando' como 1
+		inc andarAtual        // Incrementar o andar atual
 		ldi terceiroAndar,  0      // Define o registrador 'terceiroAndar' como não pressionado
 		ldi count, 0		      // Define o registrador 'count' como 0
 		ldi temp, 3			     // Define o registrador 'temp' como 3
 		out PORTB, temp		    // Mostra no display o valor 3
-		jmp main_lp            // Pula para o loop
+		jmp loop            // Pula para o loop
 
 	Descer_Elevador3:
 		inc andarAtual		      // Incrementar o andar atual
-		ldi count, 0		     // Define o registrador 'count' como 0
+		ldi count, 3		     // Define o registrador 'count' como 0
 		ldi terceiroAndar, 0    // Define o registrador 'terceiroAndar' como não pressionado
 		ldi status, descendo   // Define o registrador 'status' como descendo
-		jmp main_lp			  // Pula para o loop
+		jmp loop			  // Pula para o loop
 
 
+Parou_no_Terceiro1:
+	cpi segundoAndar, 1  // Caso segundo andar esteja como prioridade
+	breq Descer_Elevador4
+
+	cpi segundoAndar, 2 // Caso segundo andar tenha sido pressionado como não prioridade
+	breq Descer_Elevador4
+
+	cpi primeiroAndar, 1 // Caso primeiro andar esteja como prioridade
+	breq Descer_Elevador4
+
+	cpi primeiroAndar, 2 // Caso primeiro andar tenha sido pressionado como não prioridade
+	breq Descer_Elevador4
+
+	cpi terreo, 1   // Caso terreo  esteja como prioridade
+	breq Descer_Elevador4
+
+	cpi terreo, 2 // Caso terreo tenha sido pressionado como não prioridade
+	breq Descer_Elevador4
+
+
+	ldi terceiroAndar,  0  // Define o registrador 'terceiroAndar' como não pressionado
+	ldi count, 0		   // Define o registrador 'count' como 0
+	jmp Elevador_Parado   // Pula para elevador parado
+
+
+	Descer_Elevador4:
+		ldi count, 3		     // Define o registrador 'count' como 0
+		ldi terceiroAndar, 0    // Define o registrador 'terceiroAndar' como não pressionado
+		ldi status, descendo   // Define o registrador 'status' como descendo
+		jmp loop			  // Pula para o loop
 
 
 Elevador_Descendo:
 	cpi count, 3  // Quando registrador 'count' = 3, aciona rotina
 	breq continue1 
 
-	jmp main_lp   // Pula para o loop
+	jmp loop   // Pula para o loop
 
 	continue1:  // Rotina acionada
 
@@ -552,10 +573,17 @@ Elevador_Descendo:
 
 	cpi andarAtual, 1 // Caso andarAtual = Primeiro Andar
 	breq Chegou_Terreo_Andar1l
-	jmp main_lp
+
+	cpi andarAtual, 0
+	breq Parou_no_Terreo
+
+	jmp loop
 
 	Chegou_Terreo_Andar1l:  // Caso andarAtual = Primeiro Andar
 	jmp Chegou_Terreo_Andar1
+
+	Parou_no_Terreo:       // Caso andarAtual = Terreo
+	jmp Parou_no_Terreo1
 
 
 Chegou_Segundo_Andar1:
@@ -583,7 +611,7 @@ Chegou_Segundo_Andar1:
 	cpi terceiroAndar, 2 // Caso terceiro andar tenha sido pressionado como não prioridade
 	breq Subir
 
-	dec andarAtual		   // Decrementa o andar atual
+	inc andarAtual		   // Decrementa o andar atual
 	ldi segundoAndar,  0  // Define o registrador 'segundoAndar' como não pressionado
 	ldi count, 0		   // Define o registrador 'count' como 0
 	jmp Elevador_Parado  // Pula para elevador parado
@@ -592,30 +620,31 @@ Chegou_Segundo_Andar1:
 
 	Abrir_Segundo_Andar4:
 		ldi aguardando, 1          // Define o registrador 'aguardando' como 1
+		dec andarAtual		   // Decrementa o andar atual
 		ldi segundoAndar, 0	      // Define o registrador 'segundoAndar' como não pressionado
 		ldi count, 0		     // Define o registrador 'count' como 0
 		ldi temp, 2			    // Define o registrador 'temp' como 2
 		out PORTB, temp		   // Mostra no display o valor 2
-		jmp main_lp			  // Pula para o loop
+		jmp loop			  // Pula para o loop
 
 	Descer_Primeiro_Andar:
 		ldi count, 0              // Define o registrador 'count' como 0
 		dec andarAtual		     // Decrementa o andar atual
 		out PORTB, andarAtual   // Mostra no display o valor 2
-		jmp main_lp       	   // Pula para o loop
+		jmp loop       	   // Pula para o loop
 
 	Descer_Terreo2:
 		ldi count, 0              // Define o registrador 'count' como 0
 		dec andarAtual		     // Decrementa o andar atual
 		out PORTB, andarAtual   // Mostra no display o valor 2
-		jmp main_lp			   // Pula para o loop
+		jmp loop			   // Pula para o loop
 
 	Subir:
 		dec andarAtual         // Decrementa o andar atual
-		ldi count, 0		   // Define o registrador 'count' como 0
+		ldi count, 3		   // Define o registrador 'count' como 0
 		ldi segundoAndar, 0   // Define o registrador 'terceiroAndar' como não pressionado
 		ldi status, subindo  // Define o registrador 'status' como subindo
-		jmp main_lp		    // Pula para o loop
+		jmp loop		    // Pula para o loop
 						   
 
 
@@ -644,7 +673,7 @@ Chegou_Primeiro_Andar1:
 	cpi terceiroAndar, 2  // Caso terceiro andar tenha sido pressionado como não prioridade
 	breq Subir1
 
-	dec andarAtual            // Decrementa o andar atual
+	inc andarAtual            // Decrementa o andar atual
 	ldi primeiroAndar,  0	 // Define o registrador 'primeiroAndar' como não pressionado
 	ldi count, 0            // Define o registrador 'count' como 0
 	jmp Elevador_Parado	   // Pula para elevador parado
@@ -652,29 +681,30 @@ Chegou_Primeiro_Andar1:
 
 	Abrir_Primeiro_Andar5:
 		ldi aguardando, 1          // Define o registrador 'aguardando' como 1
+		dec andarAtual		   // Decrementa o andar atual
 		ldi primeiroAndar, 0      // Define o registrador 'primeiroAndar' como não pressionado
 		ldi count, 0		     // Define o registrador 'count' como 0
 		ldi temp, 1			    // Define o registrador 'temp' como 1
 		out PORTB, temp		   // Mostra no display o valor 1
-		jmp main_lp			  // Pula para o loop
+		jmp loop			  // Pula para o loop
 
 	Descer_Terreo1:
 		ldi count, 0             // Define o registrador 'count' como 0
 		dec andarAtual		    // Decrementa o andar atual
 		out PORTB, andarAtual  // Mostra no display o valor 1
-		jmp main_lp			  // Pula para o loop
+		jmp loop			  // Pula para o loop
 
 	Subir1:
 		dec andarAtual            // Decrementa o andar atual
-		ldi count, 0		     // Define o registrador 'count' como 0
+		ldi count, 3		     // Define o registrador 'count' como 0
 		ldi primeiroAndar, 0    // Define o registrador 'primeiroAndar' como não pressionado
 		ldi status, subindo	   // Define o registrador 'status' como subindo
-		jmp main_lp			  // Pula para o loop
+		jmp loop			  // Pula para o loop
 
 
 
 Chegou_Terreo_Andar1:
-	cpi terreo, 1 // Caso primeiro andar esteja como prioridade
+	cpi terreo, 1 // Caso terreo andar esteja como prioridade
 	breq Abrir_Terreo
 
 	cpi terreo, 2  // Caso terreo tenha sido pressionado como não prioridade
@@ -698,33 +728,77 @@ Chegou_Terreo_Andar1:
 	cpi terceiroAndar, 2   // Caso primeiro andar tenha sido pressionado como não prioridade
 	breq subir2
 	
-	dec andarAtual         // Decrementa o andar atual
+	inc andarAtual         // Decrementa o andar atual
 	ldi terreo,  0		  // Define o registrador 'terreo' como não pressionado
 	ldi count, 0 		 // Define o registrador 'count' como 0
 	jmp Elevador_Parado	// Pula para elevador parado
 
 	Abrir_Terreo:
 		ldi aguardando, 1       // Define o registrador 'aguardando' como 1
+		dec andarAtual		   // Decrementa o andar atual
 		ldi terreo, 0	       // Define o registrador 'terreo' como não pressionado
 		ldi count, 0	      // Define o registrador 'count' como 0
 		ldi temp, 0		     // Define o registrador 'temp' como 0
 		out PORTB, temp	    // Mostra no display o valor 0
-		jmp main_lp		   // Pula para o loop
+		jmp loop		   // Pula para o loop
 
 	subir2:
 		dec andarAtual		     // Decrementa o andar atual
-		ldi count, 0		    // Define o registrador 'count' como 0
+		ldi count, 3		    // Define o registrador 'count' como 0
 		ldi terreo, 0		   // Define o registrador 'terreo' como não pressionado
 		ldi status, subindo   // Define o registrador 'status' como subindo
-		jmp main_lp          // Pula para o loop
+		jmp loop          // Pula para o loop
+
+
+Parou_no_Terreo1:
+	cpi primeiroAndar, 1  // Caso primeiro andar esteja como prioridade
+	breq subir3
+
+	cpi primeiroAndar, 2   // Caso primeiro andar tenha sido pressionado como não prioridade
+	breq subir3
+
+	cpi segundoAndar, 1  // Caso primeiro andar esteja como prioridade
+	breq subir3
+
+	cpi segundoAndar, 2   // Caso primeiro andar tenha sido pressionado como não prioridade
+	breq subir3
+
+	cpi terceiroAndar, 1  // Caso primeiro andar esteja como prioridade
+	breq subir3
+
+	cpi terceiroAndar, 2   // Caso primeiro andar tenha sido pressionado como não prioridade
+	breq subir3
+	
+
+	ldi terreo,  0		  // Define o registrador 'terreo' como não pressionado
+	ldi count, 0 		 // Define o registrador 'count' como 0
+	jmp Elevador_Parado	// Pula para elevador parado
+
+	subir3:
+		ldi count, 3		    // Define o registrador 'count' como 0
+		ldi terreo, 0		   // Define o registrador 'terreo' como não pressionado
+		ldi status, subindo   // Define o registrador 'status' como subindo
+		jmp loop          // Pula para o loop
+
 
 
 Botao_Abrir_Porta_Pressionado:
-	jmp main_lp 
+
+	cpi aguardando,1           // Se 'aguardando' estiver acionado, mantem a porta aberta
+	breq manter_porta_aberta  
+	jmp loop 
+
+	manter_porta_aberta:          // Segura a porta enquando estiver com o botao pressionado
+	sbic PORTC, Botao_Abrir_Porta
+	rjmp Botao_Abrir_Porta_Pressionado
+
+	ldi count, 10 // Quando o botão para de ser pressionado, define o 'count' para e fecha a porta
+	jmp loop 
+	
 
 Botao_Fechar_Porta_Pressionado:
 	cbi PORTB, LED          // Desliga o LED
 	cbi PORTB, BUZZER	   // Desliga BUZZER
 	ldi aguardando, 0     // Define registrador 'aguardando'' como 0
 	ldi count, 0         // Define o registrador 'count' como 0
-	jmp main_lp         // Pula para o loop
+	jmp loop         // Pula para o loop

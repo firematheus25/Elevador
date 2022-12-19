@@ -1,10 +1,10 @@
 
-AVRASM ver. 2.2.8  C:\Users\mathe\Documents\Atmel Studio\7.0\AssemblerApplication3\AssemblerApplication3\main.asm Sun Dec 18 20:47:45 2022
+AVRASM ver. 2.2.8  C:\Users\mathe\Documents\Atmel Studio\7.0\ElevadorTeste\ElevadorTeste\main.asm Mon Dec 19 09:19:35 2022
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328Pdef.inc'
-C:\Users\mathe\Documents\Atmel Studio\7.0\AssemblerApplication3\AssemblerApplication3\main.asm(16): warning: Register r26 already defined by the .DEF directive
-C:\Users\mathe\Documents\Atmel Studio\7.0\AssemblerApplication3\AssemblerApplication3\main.asm(17): warning: Register r27 already defined by the .DEF directive
-C:\Users\mathe\Documents\Atmel Studio\7.0\AssemblerApplication3\AssemblerApplication3\main.asm(18): warning: Register r28 already defined by the .DEF directive
+C:\Users\mathe\Documents\Atmel Studio\7.0\ElevadorTeste\ElevadorTeste\main.asm(16): warning: Register r26 already defined by the .DEF directive
+C:\Users\mathe\Documents\Atmel Studio\7.0\ElevadorTeste\ElevadorTeste\main.asm(17): warning: Register r27 already defined by the .DEF directive
+C:\Users\mathe\Documents\Atmel Studio\7.0\ElevadorTeste\ElevadorTeste\main.asm(18): warning: Register r28 already defined by the .DEF directive
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328Pdef.inc'
                                  
                                  .cseg
@@ -991,7 +991,7 @@ C:\Users\mathe\Documents\Atmel Studio\7.0\AssemblerApplication3\AssemblerApplica
                                  
 000000 940c 0018                 jmp reset
                                  .org OC1Aaddr
-000016 940c 003a                 jmp OCI1A_Interrupt
+000016 940c 0039                 jmp OCI1A_Interrupt
                                  
                                  reset:
                                  	.def temp = r16
@@ -1014,7 +1014,7 @@ C:\Users\mathe\Documents\Atmel Studio\7.0\AssemblerApplication3\AssemblerApplica
                                  	.equ Botao_Abrir_Porta = PC4
                                  	.equ Botao_Fechar_Porta = PC5
                                  
-                                 	.equ Botao_Terro_Externo = PD7
+                                 	.equ Botao_Terreo_Externo = PD7
                                  	.equ Botao_Primeiro_Andar_Externo = PD6
                                  	.equ Botao_Segundo_Andar_Externo = PD5
                                  	.equ Botao_Terceiro_Andar_Externo = PD4
@@ -1036,7 +1036,7 @@ C:\Users\mathe\Documents\Atmel Studio\7.0\AssemblerApplication3\AssemblerApplica
                                  	// Pinos PB3, PB2, PB1, PB0, da porta B, utilizados para configuração do CI CD4511
                                  	// Pino PB4 - Configurado como LED
                                  	// Pino PB6 - Configurado como Buzzer
-00001c e00f                      	ldi temp, 0b00001111
+00001c e30f                      	ldi temp, 0b00111111
 00001d b904                      	out DDRB, temp
                                  	
                                  	// Inicia o Display com 0
@@ -1054,29 +1054,8 @@ C:\Users\mathe\Documents\Atmel Studio\7.0\AssemblerApplication3\AssemblerApplica
 000022 e000                      	ldi temp, 0b00000000
 000023 b90a                      	out DDRD, temp
                                  	
-000024 ef0f                      	ldi temp, 0b11111111 ;Carrega 11111111 em temp
-000025 b90b                      	out PORTD, temp  // Habilita pull-up em PD7, PD6, PD5, PD4
-                                 
-                                 
-                                 	/*ldi temp, 0b00000000 ;Carrega em temp 00000000
-                                 	out DDRB, temp 
-                                 
-                                 	ldi temp, 0b11111100 ;Carrega em temp 11111100
-                                 	out DDRD, temp ;Configura PORTD7 e PORTD6 como saída usadas pelo led e buzzer. 
-                                 	;Configura PORTD5, PORTD4, PORTD3 e PORTD2 como saída usadas pelo CI
-                                 
-                                 	ldi temp, 0b00000000 ;Carrega em temp 00000000
-                                 	out DDRC, temp ;Na porta C terá apenas botões
-                                 
-                                 	ldi temp, 0b00001111;Carrega 00001111 em temp
-                                 	out PORTB, temp ;inicializa as portas PB4 (Buzzer) e PB3 (Led) em LOW, e habilita pull-up em PB3, PB2, PB1 e PB0
-                                 
-                                 	ldi temp, 0b00111111 ;Carrega 00111111 em temp
-                                 	out PORTC, temp ;Habilita pull-up em PC5, PC4, PC3, PC2, PC1 e PC0
-                                 	
-                                 	;         0b00DCBA00
-                                 	ldi temp, 0b00000000 ;Carrega 00000000 em temp
-                                 	out PORTD, temp ;inicializa as portas PD5, PD4, PD3 e PD2 (CI) em LOW, mostrando um 0 no display de 7 segmentos*/
+                                 	/*ldi temp, 0b11111111 ;Carrega 11111111 em temp
+                                 	out PORTD, temp  // Habilita pull-up em PD7, PD6, PD5, PD4*/
                                  
                                  
                                  	// Definição Timer com 1 Segundo * Início *
@@ -1089,633 +1068,728 @@ C:\Users\mathe\Documents\Atmel Studio\7.0\AssemblerApplication3\AssemblerApplica
                                  	.equ TOP = int(0.5 + ((ClockMHz*1000000/PreScaleDiv)*TimerDelaySeg)); 1s --> TOP = 62500 com prescaler de 256
                                  	.equ WGM = 0b0100 ; Configura o modo de operação do timer para CTC 
                                  
-000026 ef04                      	ldi temp, high(TOP) ; Carregando TOP em OCR1A
-000027 9300 0089                 	sts OCR1AH, temp
-000029 e204                      	ldi temp, low(TOP)
-00002a 9300 0088                 	sts OCR1AL, temp
+000024 ef04                      	ldi temp, high(TOP) ; Carregando TOP em OCR1A
+000025 9300 0089                 	sts OCR1AH, temp
+000027 e204                      	ldi temp, low(TOP)
+000028 9300 0088                 	sts OCR1AL, temp
                                  
-00002c e000                      	ldi temp, ((WGM&0b11)<<WGM10) ; Carrega WGM e PreScale
-00002d 9300 0080                 	sts TCCR1A, temp 
-00002f e00c                      	ldi temp, ((WGM>> 2) << WGM12)|(PreScaleMask << CS10)
-000030 9300 0081                 	sts TCCR1B, temp 
+00002a e000                      	ldi temp, ((WGM&0b11)<<WGM10) ; Carrega WGM e PreScale
+00002b 9300 0080                 	sts TCCR1A, temp 
+00002d e00c                      	ldi temp, ((WGM>> 2) << WGM12)|(PreScaleMask << CS10)
+00002e 9300 0081                 	sts TCCR1B, temp 
                                  
-000032 9100 006f                 	lds temp, TIMSK1
-000034 6002                      	sbr temp, 1 <<OCIE1A
-000035 9300 006f                 	sts TIMSK1, temp
+000030 9100 006f                 	lds temp, TIMSK1
+000032 6002                      	sbr temp, 1 <<OCIE1A
+000033 9300 006f                 	sts TIMSK1, temp
                                  	// Definição Timer com 1 Segundo * Fim *
                                  
                                  	
-000037 e010                      	ldi count, 0 //Inicializa Contador em 0
-000038 e040                      	ldi status, parado //Inicializa status em 0
+000035 e010                      	ldi count, 0           //Inicializa Contador em 0
+000036 e040                      	ldi status, parado    //Inicializa status em 0
+000037 e020                      	ldi andarAtual, 0    // Inicializa andarAtual em 0
                                  
-000039 c011                      	rjmp main_lp
+000038 c011                      	rjmp loop
                                  
                                  // Interrupção do timer, Sua função é incrementar o count a cada 1 segundo
                                  OCI1A_Interrupt:
-00003a 930f                      	push r16
-00003b b70f                      	in r16, SREG
-00003c 930f                      	push r16
+000039 930f                      	push r16
+00003a b70f                      	in r16, SREG
+00003b 930f                      	push r16
                                  	
-00003d 9513                      	inc count
+00003c 9513                      	inc count
                                  	
-00003e 910f                      	pop r16
-00003f bf0f                      	out SREG, r16
-000040 910f                      	pop r16
-000041 9478                      	sei
-000042 9518                      	reti
+00003d 910f                      	pop r16
+00003e bf0f                      	out SREG, r16
+00003f 910f                      	pop r16
+000040 9478                      	sei
+000041 9518                      	reti
                                  
                                  // Efetuar um delay de 20ms
                                  debounce:
-000043 e0f0                      	ldi r31, byte3(ClockMHz * 1000 * DelayMs / 5)
-000044 efea                      	ldi r30, high(ClockMHz * 1000 * DelayMs / 5)
-000045 e0d0                      	ldi r29, low(ClockMHz * 1000 * DelayMs / 5)
+000042 e0f0                      	ldi r31, byte3(ClockMHz * 1000 * DelayMs / 5)
+000043 efea                      	ldi r30, high(ClockMHz * 1000 * DelayMs / 5)
+000044 e0d0                      	ldi r29, low(ClockMHz * 1000 * DelayMs / 5)
                                  	
-000046 50d1                      	subi r29, 1
-000047 40e0                      	sbci r30, 0
-000048 40f0                      	sbci r31, 0
-000049 f7e0                      	brcc pc-3
+000045 50d1                      	subi r29, 1
+000046 40e0                      	sbci r30, 0
+000047 40f0                      	sbci r31, 0
+000048 f7e0                      	brcc pc-3
                                  	
-00004a 9508                      	ret
-                                 
-                                 main_lp:
-00004b 9478                      	sei
-                                 
-00004c 9930                      	sbic PINC, Botao_Terro_Interno   // Quando este botao for precionado aciona a rotina
-00004d c025                      	rjmp Botao_Terreo_Interno_Pressionado  
-                                 
-00004e 9931                      	sbic PINC, Botao_Primeiro_Andar_Interno // Quando este botao for precionado aciona a rotina 
-00004f c02b                      	rjmp Botao_Primeiro_Andar_Interno_Pressionado 
-                                 
-000050 9932                      	sbic PINC, Botao_Segundo_Andar_Interno  // Quando este botao for precionado aciona a rotina
-000051 c030                      	rjmp Botao_Segundo_Andar_Interno_Pressionado 
-                                 
-000052 9933                      	sbic PINC, Botao_Terceiro_Andar_Interno  // Quando este botao for precionado aciona a rotina
-000053 c035                      	rjmp Botao_Terceiro_Andar_Interno_Pressionado
-                                 
-000054 9937                      	sbic PINC, Botao_Terro_Externo  // Quando este botao for precionado aciona a rotina
-000055 c03a                      	rjmp Botao_Terreo_Externo_Pressionado 
-                                 
-000056 994e                      	sbic PIND, Botao_Primeiro_Andar_Externo // Quando este botao for precionado aciona a rotina
-000057 c041                      	rjmp Botao_Primeiro_Andar_Externo_Pressionado 
-                                 
-000058 994d                      	sbic PIND, Botao_Segundo_Andar_Externo  // Quando este botao for precionado aciona a rotina
-000059 c048                      	rjmp Botao_Segundo_Andar_Externo_Pressionado 
-                                 
-00005a 994c                      	sbic PIND, Botao_Terceiro_Andar_Externo  // Quando este botao for precionado aciona a rotina
-00005b c04f                      	rjmp Botao_Terceiro_Andar_Externo_Pressionado
-                                 
-00005c 9934                      	sbic PINC, Botao_Abrir_Porta // Quando este botao for precionado aciona a rotina
-00005d 940c 01dd                 	jmp Botao_Abrir_Porta_Pressionado 
-                                 
-00005f 9935                      	sbic PINC, Botao_Fechar_Porta  // Quando este botao for precionado aciona a rotina
-000060 940c 01df                 	jmp Botao_Fechar_Porta_Pressionado
+000049 9508                      	ret
                                  
                                  
-000062 3051                      	cpi aguardando, 1  // Verifica se registrador 'aguardando' está ativado, Se sim, desvia para a rotina
-000063 f031                      	breq aguardando1	
                                  
-000064 3040                      	cpi status, parado // Verifica se registrador 'status' está com o valor de parado, Se sim, desvia para a rotina
-000065 f031                      	breq parado1
+                                 loop:
+00004a 9478                      	sei
                                  
-000066 3042                      	cpi status, subindo // Verifica se registrador 'status' está com o valor de subindo, Se sim, desvia para a rotina
-000067 f031                      	breq subindo1
+00004b 9930                      	sbic PINC, Botao_Terro_Interno   // Quando este botao for precionado aciona a rotina
+00004c c025                      	rjmp Botao_Terreo_Interno_Pressionado  
                                  
-000068 3041                      	cpi status, descendo // // Verifica se registrador 'status' está com o valor de descendo, Se sim, desvia para a rotina
-000069 f031                      	breq descendo1
+00004d 9931                      	sbic PINC, Botao_Primeiro_Andar_Interno // Quando este botao for precionado aciona a rotina 
+00004e c02a                      	rjmp Botao_Primeiro_Andar_Interno_Pressionado 
+                                 
+00004f 9932                      	sbic PINC, Botao_Segundo_Andar_Interno  // Quando este botao for precionado aciona a rotina
+000050 c02e                      	rjmp Botao_Segundo_Andar_Interno_Pressionado
+                                 
+000051 9933                      	sbic PINC, Botao_Terceiro_Andar_Interno  // Quando este botao for precionado aciona a rotina
+000052 c033                      	rjmp Botao_Terceiro_Andar_Interno_Pressionado
+                                 
+000053 994f                      	sbic PIND, Botao_Terreo_Externo  // Quando este botao for precionado aciona a rotina
+000054 c038                      	rjmp Botao_Terreo_Externo_Pressionado 
+                                 
+000055 994e                      	sbic PIND, Botao_Primeiro_Andar_Externo // Quando este botao for precionado aciona a rotina
+000056 c03f                      	rjmp Botao_Primeiro_Andar_Externo_Pressionado 
+                                 
+000057 994d                      	sbic PIND, Botao_Segundo_Andar_Externo  // Quando este botao for precionado aciona a rotina
+000058 c046                      	rjmp Botao_Segundo_Andar_Externo_Pressionado 
+                                 
+000059 994c                      	sbic PIND, Botao_Terceiro_Andar_Externo  // Quando este botao for precionado aciona a rotina
+00005a c04d                      	rjmp Botao_Terceiro_Andar_Externo_Pressionado
+                                 
+00005b 9934                      	sbic PINC, Botao_Abrir_Porta // Quando este botao for precionado aciona a rotina
+00005c 940c 0211                 	jmp Botao_Abrir_Porta_Pressionado 
+                                 
+00005e 9935                      	sbic PINC, Botao_Fechar_Porta  // Quando este botao for precionado aciona a rotina
+00005f 940c 021a                 	jmp Botao_Fechar_Porta_Pressionado
+                                 
+000061 3051                      	cpi aguardando, 1  // Verifica se registrador 'aguardando' está ativado, Se sim, desvia para a rotina
+000062 f031                      	breq aguardando1	
+                                 
+000063 3040                      	cpi status, parado // Verifica se registrador 'status' está com o valor de parado, Se sim, desvia para a rotina
+000064 f031                      	breq parado1
+                                 
+000065 3042                      	cpi status, subindo // Verifica se registrador 'status' está com o valor de subindo, Se sim, desvia para a rotina
+000066 f031                      	breq subindo1
+                                 
+000067 3041                      	cpi status, descendo // // Verifica se registrador 'status' está com o valor de descendo, Se sim, desvia para a rotina
+000068 f031                      	breq descendo1
                                  
                                  
                                  	aguardando1: // Pula para rotina de aguardando
-00006a 940c 00c8                 	jmp Elevador_Aguardando
+000069 940c 00c5                 	jmp Elevador_Aguardando
                                  
                                  	parado1:  // Pula para rotina de parado
-00006c 940c 00b4                 	jmp Elevador_Parado
+00006b 940c 00b1                 	jmp Elevador_Parado
                                  
                                  	subindo1: // Pula para rotina de subindo
-00006e 940c 00d7                 	jmp Elevador_subindo
+00006d 940c 00d4                 	jmp Elevador_subindo
                                  
                                  	descendo1: // Pula para rotina de descendo
-000070 940c 015a                 	jmp Elevador_Descendo
+00006f 940c 0172                 	jmp Elevador_Descendo
                                  
-000072 cfd8                      	rjmp main_lp
+000071 cfd8                      	rjmp loop
                                  
                                  
                                  
                                  Botao_Terreo_Interno_Pressionado:
-000073 940e 0043                 	call debounce              // Chama o delay de 20ms
-000075 985c                      	cbi PORTD, LED 
-000076 e000                      	ldi temp, 0               // Define o Registrador 'temp', com o numero do andar pressionado
-000077 e091                      	ldi terreo, 1            // Marca o registrador 'terreo' como chamada interna, Prioridade
-000078 3040                      	cpi status, parado      // Verifica se o registrador 'status' está parado, se sim, aciona rotina 
-000079 f1f1                      	breq Inicia_Elevador
-00007a cfd0                      	rjmp main_lp          // Pula para o loop
+000072 dfcf                      	rcall debounce              // Chama o delay de 20ms
+000073 985c                      	cbi PORTD, LED 
+000074 e000                      	ldi temp, 0               // Define o Registrador 'temp', com o numero do andar pressionado
+000075 e091                      	ldi terreo, 1            // Marca o registrador 'terreo' como chamada interna, Prioridade
+000076 3040                      	cpi status, parado      // Verifica se o registrador 'status' está parado, se sim, aciona rotina 
+000077 f1e9                      	breq Inicia_Elevador
+000078 cfd1                      	rjmp loop          // Pula para o loop
                                  	
                                  
                                  Botao_Primeiro_Andar_Interno_Pressionado:
-00007b 940e 0043                 	call debounce                 // Chama o delay de 20ms  
-00007d e001                      	ldi temp, 1    			     // Define o Registrador 'temp', com o numero do andar pressionado
-00007e e0a1                      	ldi primeiroAndar, 1	    // Marca o registrador 'primeiroAndar' como chamada interna, Prioridade
-00007f 3040                      	cpi status, parado  	   // Verifica se o registrador 'status' está parado, se sim, aciona rotina
-000080 f1b9                      	breq Inicia_Elevador
-000081 cfc9                      	rjmp main_lp 			 // Pula para o loop
+000079 dfc8                      	rcall debounce                 // Chama o delay de 20ms  
+00007a e001                      	ldi temp, 1    			     // Define o Registrador 'temp', com o numero do andar pressionado
+00007b e0a1                      	ldi primeiroAndar, 1	    // Marca o registrador 'primeiroAndar' como chamada interna, Prioridade
+00007c 3040                      	cpi status, parado  	   // Verifica se o registrador 'status' está parado, se sim, aciona rotina
+00007d f1b9                      	breq Inicia_Elevador
+00007e cfcb                      	rjmp loop 	
                                  
                                  
                                  Botao_Segundo_Andar_Interno_Pressionado:
-000082 940e 0043                 	call debounce                 // Chama o delay de 20ms
-000084 e002                      	ldi temp, 2				     // Define o Registrador 'temp', com o numero do andar pressionado
-000085 e0b1                      	ldi segundoAndar, 1		    // Marca o registrador 'segundoAndar' como chamada interna, Prioridade
-000086 3040                      	cpi status, parado		   // Verifica se o registrador 'status' está parado, se sim, aciona rotina
-000087 f181                      	breq Inicia_Elevador
-000088 cfc2                      	rjmp main_lp			 // Pula para o loop
-                                 
+00007f 940e 0042                 	call debounce                 // Chama o delay de 20ms
+000081 e002                      	ldi temp, 2				     // Define o Registrador 'temp', com o numero do andar pressionado
+000082 e0b1                      	ldi segundoAndar, 1		    // Marca o registrador 'segundoAndar' como chamada interna, Prioridade
+000083 3040                      	cpi status, parado		   // Verifica se o registrador 'status' está parado, se sim, aciona rotina
+000084 f181                      	breq Inicia_Elevador
+000085 cfc4                      	rjmp loop			 // Pula para o loop
                                  
                                  Botao_Terceiro_Andar_Interno_Pressionado:
-000089 940e 0043                 	call debounce                    // Chama o delay de 20ms
-00008b e003                      	ldi temp, 3					    // Define o Registrador 'temp', com o numero do andar pressionado
-00008c e0c1                      	ldi terceiroAndar, 1		   // Marca o registrador 'terceiroAndar' como chamada interna, Prioridade
-00008d 3040                      	cpi status, parado			  // Verifica se o registrador 'status' está parado, se sim, aciona rotina
-00008e f149                      	breq Inicia_Elevador
-00008f cfbb                      	rjmp main_lp				// Pula para o loop
+000086 940e 0042                 	call debounce                    // Chama o delay de 20ms
+000088 e003                      	ldi temp, 3					    // Define o Registrador 'temp', com o numero do andar pressionado
+000089 e0c1                      	ldi terceiroAndar, 1		   // Marca o registrador 'terceiroAndar' como chamada interna, Prioridade
+00008a 3040                      	cpi status, parado			  // Verifica se o registrador 'status' está parado, se sim, aciona rotina
+00008b f149                      	breq Inicia_Elevador
+00008c cfbd                      	rjmp loop				// Pula para o loop
+                                 
                                  
                                  
                                  Botao_Terreo_Externo_Pressionado:
-000090 940e 0043                 	call debounce	             // Chama o delay de 20ms    
-000092 e000                      	ldi temp, 0			    	// Define o Registrador 'temp', com o numero do andar pressionado				
-000093 3091                      	cpi terreo, 1              // Verifica se o chamada do Terreo ja foi feita pelo botão interno
-000094 f009                      	breq Continue_Terreo      // Se foi feita, mantem a prioridade	
-000095 e092                      	ldi terreo, 2            // Se não, marca o registrador 'terreo' como chamada externa, sem Prioridade
+00008d 940e 0042                 	call debounce	             // Chama o delay de 20ms    
+00008f e000                      	ldi temp, 0			    	// Define o Registrador 'temp', com o numero do andar pressionado				
+000090 3091                      	cpi terreo, 1              // Verifica se o chamada do Terreo ja foi feita pelo botão interno
+000091 f009                      	breq Continue_Terreo      // Se foi feita, mantem a prioridade	
+000092 e092                      	ldi terreo, 2            // Se não, marca o registrador 'terreo' como chamada externa, sem Prioridade
                                  	Continue_Terreo:
-000096 3040                      	cpi status, parado     // Verifica se o registrador 'status' está parado, se sim, aciona rotina
-000097 f101                      	breq Inicia_Elevador
-000098 cfb2                      	rjmp main_lp         // Pula para o loop
+000093 3040                      	cpi status, parado     // Verifica se o registrador 'status' está parado, se sim, aciona rotina
+000094 f101                      	breq Inicia_Elevador
+000095 cfb4                      	rjmp loop         // Pula para o loop
                                  	
                                  
                                  Botao_Primeiro_Andar_Externo_Pressionado:
-000099 940e 0043                 	call debounce				         // Chama o delay de 20ms    
-00009b e001                      	ldi temp, 1					    	// Define o Registrador 'temp', com o numero do andar pressionado				
-00009c 30a1                      	cpi primeiroAndar, 1		       // Verifica se o chamada do primeiro andar ja foi feita pelo botão interno
-00009d f009                      	breq Continue_Primeiro_Andar      // Se foi feita, mantem a prioridade	
-00009e e0a2                      	ldi primeiroAndar, 2		     // Se não, marca o registrador 'primeiroAndar' como chamada externa, sem Prioridade
+000096 940e 0042                 	call debounce				         // Chama o delay de 20ms    
+000098 e001                      	ldi temp, 1					    	// Define o Registrador 'temp', com o numero do andar pressionado				
+000099 30a1                      	cpi primeiroAndar, 1		       // Verifica se o chamada do primeiro andar ja foi feita pelo botão interno
+00009a f009                      	breq Continue_Primeiro_Andar      // Se foi feita, mantem a prioridade	
+00009b e0a2                      	ldi primeiroAndar, 2		     // Se não, marca o registrador 'primeiroAndar' como chamada externa, sem Prioridade
                                  	Continue_Primeiro_Andar:
-00009f 3040                      	cpi status, parado			   // Verifica se o registrador 'status' está parado, se sim, aciona rotina
-0000a0 f0b9                      	breq Inicia_Elevador
-0000a1 cfa9                      	rjmp main_lp				 // Pula para o loop
+00009c 3040                      	cpi status, parado			   // Verifica se o registrador 'status' está parado, se sim, aciona rotina
+00009d f0b9                      	breq Inicia_Elevador
+00009e cfab                      	rjmp loop				 // Pula para o loop
                                  
                                  
                                  Botao_Segundo_Andar_Externo_Pressionado:
-0000a2 940e 0043                 	call debounce			           // Chama o delay de 20ms    
-0000a4 e002                      	ldi temp, 2				          // Define o Registrador 'temp', com o numero do andar pressionado				
-0000a5 30b1                      	cpi segundoAndar, 1		         // Verifica se o chamada do segundo andar ja foi feita pelo botão interno
-0000a6 f009                      	breq Continue_Segundo_Andar     // Se foi feita, mantem a prioridade	
-0000a7 e0b2                      	ldi segundoAndar, 2		       // Se não, marca o registrador 'segundoAndar' como chamada externa, sem Prioridade
+00009f 940e 0042                 	call debounce			           // Chama o delay de 20ms    
+0000a1 e002                      	ldi temp, 2				          // Define o Registrador 'temp', com o numero do andar pressionado				
+0000a2 30b1                      	cpi segundoAndar, 1		         // Verifica se o chamada do segundo andar ja foi feita pelo botão interno
+0000a3 f009                      	breq Continue_Segundo_Andar     // Se foi feita, mantem a prioridade	
+0000a4 e0b2                      	ldi segundoAndar, 2		       // Se não, marca o registrador 'segundoAndar' como chamada externa, sem Prioridade
                                  	Continue_Segundo_Andar:
-0000a8 3040                      	cpi status, parado		     // Verifica se o registrador 'status' está parado, se sim, aciona rotina
-0000a9 f071                      	breq Inicia_Elevador
-0000aa cfa0                      	rjmp main_lp			   // Pula para o loop
+0000a5 3040                      	cpi status, parado		     // Verifica se o registrador 'status' está parado, se sim, aciona rotina
+0000a6 f071                      	breq Inicia_Elevador
+0000a7 cfa2                      	rjmp loop			   // Pula para o loop
                                  
                                  
                                  Botao_Terceiro_Andar_Externo_Pressionado:
-0000ab 940e 0043                 	call debounce				        // Chama o delay de 20ms    
-0000ad e003                      	ldi temp, 3					       // Define o Registrador 'temp', com o numero do andar pressionado				
-0000ae 30c1                      	cpi terceiroAndar, 1		      // Verifica se o chamada do terceiro andar ja foi feita pelo botão interno
-0000af f009                      	breq Continue_Terceiro_Andar     // Se foi feita, mantem a prioridade	
-0000b0 e0c2                      	ldi terceiroAndar, 2		    // Se não, marca o registrador 'terceiroAndar' como chamada externa, sem Prioridade
+0000a8 940e 0042                 	call debounce				        // Chama o delay de 20ms    
+0000aa e003                      	ldi temp, 3					       // Define o Registrador 'temp', com o numero do andar pressionado				
+0000ab 30c1                      	cpi terceiroAndar, 1		      // Verifica se o chamada do terceiro andar ja foi feita pelo botão interno
+0000ac f009                      	breq Continue_Terceiro_Andar     // Se foi feita, mantem a prioridade	
+0000ad e0c2                      	ldi terceiroAndar, 2		    // Se não, marca o registrador 'terceiroAndar' como chamada externa, sem Prioridade
                                  	Continue_Terceiro_Andar:
-0000b1 3040                      	cpi status, parado			  // Verifica se o registrador 'status' está parado, se sim, aciona rotina
-0000b2 f029                      	breq Inicia_Elevador        
-0000b3 cf97                      	rjmp main_lp				// Pula para o loop
-                                 
+0000ae 3040                      	cpi status, parado			  // Verifica se o registrador 'status' está parado, se sim, aciona rotina
+0000af f029                      	breq Inicia_Elevador        
+0000b0 cf99                      	rjmp loop				// Pula para o loop
                                  
                                  
                                  Elevador_Parado:
-0000b4 e010                      	ldi count, 0  // Seta o valor do registrador 'count' como 0
-0000b5 e040                      	ldi status, parado // Seta o valor do registrador 'status' como Parado
-0000b6 940c 004b                 	jmp main_lp
+0000b1 e010                      	ldi count, 0  // Seta o valor do registrador 'count' como 0
+0000b2 e040                      	ldi status, parado // Seta o valor do registrador 'status' como Parado
+0000b3 940c 004a                 	jmp loop
                                  
                                  Inicia_Elevador:
-0000b8 e010                      	ldi count, 0         // Seta o valor do registrador 'count' como 0
+0000b5 e010                      	ldi count, 0         // Seta o valor do registrador 'count' como 0	
                                  
-0000b9 1720                      	cp andarAtual, temp //Verifica se o valor do registrador 'andarAtual é IGUAL ao valor colocado em temp
-0000ba f021                      	breq igual         // Valor de tempo definido por qual botão foi apertado  
+0000b6 1720                      	cp andarAtual, temp //Verifica se o valor do registrador 'andarAtual é IGUAL ao valor colocado em temp
+0000b7 f021                      	breq igual         // Valor de tempo definido por qual botão foi apertado  
                                  
-0000bb 1720                      	cp andarAtual, temp  //Verifica se o valor do registrador 'andarAtual é MAIOR ao valor colocado em temp
-0000bc f040                      	brlo menor			// Valor de tempo definido por qual botão foi apertado  
+0000b8 1720                      	cp andarAtual, temp  //Verifica se o valor do registrador 'andarAtual é MAIOR ao valor colocado em temp
+0000b9 f040                      	brlo menor			// Valor de tempo definido por qual botão foi apertado  
                                  						
-0000bd 1720                      	cp andarAtual, temp //Verifica se o valor do registrador 'andarAtual é MENOR ao valor colocado em temp
-0000be f41c                      	brge maior		   // Valor de tempo definido por qual botão foi apertado  
+0000ba 1720                      	cp andarAtual, temp //Verifica se o valor do registrador 'andarAtual é MENOR ao valor colocado em temp
+0000bb f41c                      	brge maior		   // Valor de tempo definido por qual botão foi apertado  
                                  
                                  
                                  	igual:
-0000bf e042                      	ldi status, subindo // Se andaAtual for igual, mantem o status de 'MesmoAndar'
-0000c0 940c 004b                 	jmp main_lp
+0000bc e042                      	ldi status, subindo // Se andaAtual for igual, mantem o status de 'MesmoAndar'
+0000bd 940c 004a                 	jmp loop
                                  
                                  	maior:
-0000c2 e041                      	ldi status, descendo  // Se andaAtual for maior, define o status para 'descendo'
-0000c3 940c 004b                 	jmp main_lp
+0000bf e041                      	ldi status, descendo  // Se andaAtual for maior, define o status para 'descendo'
+0000c0 940c 004a                 	jmp loop
                                  
                                  	menor:
-0000c5 e042                      	ldi status, subindo // Se andaAtual for menor, define o status para 'subindo'
-0000c6 940c 004b                 	jmp main_lp
+0000c2 e042                      	ldi status, subindo // Se andaAtual for menor, define o status para 'subindo'
+0000c3 940c 004a                 	jmp loop
                                  
                                  
                                  
                                  Elevador_Aguardando:
-0000c8 9a2c                      	sbi PORTB, LED // Acende o LEd
+0000c5 9a2c                      	sbi PORTB, LED // Acende o LEd
                                  
-0000c9 3015                      	cpi count, 5  // Quando se passarem 5 segundos e registrador 'aguardando' como 1,
-0000ca f009                      	breq Ligar_Buzzer  // Ligar o BUZZER
-0000cb c001                      	rjmp pula_buzzer
+0000c6 3015                      	cpi count, 5  // Quando se passarem 5 segundos e registrador 'aguardando' como 1,
+0000c7 f009                      	breq Ligar_Buzzer  // Ligar o BUZZER
+0000c8 c001                      	rjmp pula_buzzer
                                  
                                  	Ligar_Buzzer:
-0000cc 9a2e                      	 sbi PORTB, BUZZER
+0000c9 9a2e                      	 sbi PORTB, BUZZER
                                  
                                  	pula_buzzer:
                                  
-0000cd 301a                      	cpi count, 10 // Quando se passarem 10 segundos e registrador 'aguardando' como 1,
-0000ce f011                      	breq Fechar_Porta // Chama rotina
-0000cf 940c 004b                 	jmp main_lp 
+0000ca 301a                      	cpi count, 10 // Quando se passarem 10 segundos e registrador 'aguardando' como 1,
+0000cb f011                      	breq Fechar_Porta // Chama rotina
+0000cc 940c 004a                 	jmp loop 
                                  
                                  	Fechar_Porta:
-0000d1 982c                      	cbi PORTB, LED          // Desliga o LED
-0000d2 982e                      	cbi PORTB, BUZZER	   // Desliga BUZZER
-0000d3 e050                      	ldi aguardando, 0     // Seta registrador 'aguardando' como 0
-0000d4 e010                      	ldi count, 0         // Seta registrador 'count' como 0
-0000d5 940c 004b                 	jmp main_lp         // Pula para o loop
+0000ce 982c                      	cbi PORTB, LED          // Desliga o LED
+0000cf 982e                      	cbi PORTB, BUZZER	   // Desliga BUZZER
+0000d0 e050                      	ldi aguardando, 0     // Seta registrador 'aguardando' como 0
+0000d1 e010                      	ldi count, 0         // Seta registrador 'count' como 0
+0000d2 940c 004a                 	jmp loop         // Pula para o loop
                                  
                                  
                                  
                                  Elevador_subindo:
-0000d7 3011                      	cpi count, 1   // Quando registrador 'count' = 3, aciona rotina
-0000d8 f011                      	breq continue
+0000d4 3013                      	cpi count, 3  // Quando registrador 'count' = 3, aciona rotina
+0000d5 f011                      	breq continue
                                  
-0000d9 940c 004b                 	jmp main_lp  // Pula para o loop
+0000d6 940c 004a                 	jmp loop  // Pula para o loop
                                  
                                  	continue: // Rotina acionada
                                  
-0000db 3020                      	cpi andarAtual, 0   // Caso andarAtual = Terreo
-0000dc f041                      	breq Chegou_Primeiro_Andar
+0000d8 3020                      	cpi andarAtual, 0   // Caso andarAtual = Terreo
+0000d9 f061                      	breq Chegou_Primeiro_Andar
                                  
-0000dd 3021                      	cpi andarAtual, 1 // Caso andarAtual = Primeiro Andar
-0000de f191                      	breq Chegou_Segundo_Andar
+0000da 3021                      	cpi andarAtual, 1 // Caso andarAtual = Primeiro Andar
+0000db f1b9                      	breq Chegou_Segundo_Andar
                                  
-0000df 3022                      	cpi andarAtual, 2 // Caso andarAtual = Segundo Andar
-0000e0 f011                      	breq Chegou_Terceiro_Andarl
-0000e1 940c 004b                 	jmp main_lp
+0000dc 3022                      	cpi andarAtual, 2 // Caso andarAtual = Segundo Andar
+0000dd f021                      	breq Chegou_Terceiro_Andarl
                                  
+0000de 3023                      	cpi andarAtual, 3
+0000df f021                      	breq Parou_no_Terceiro
+                                 
+0000e0 940c 004a                 	jmp loop
+                                 	
                                  	Chegou_Terceiro_Andarl: // Caso andarAtual = Segundo Andar
-0000e3 940c 00e3                 	jmp Chegou_Terceiro_Andarl
+0000e2 940c 013b                 	jmp Chegou_Terceiro_Andar
+                                 	 
+                                 	Parou_no_Terceiro:   // Caso andarAtual = Terceiro Andar
+0000e4 940c 015d                 	jmp Parou_no_Terceiro1
+                                 
+                                 
                                  
                                  
                                  Chegou_Primeiro_Andar:
-0000e5 30a1                      	cpi  primeiroAndar, 1   // Caso primero andar esteja como prioridade
-0000e6 f099                      	breq Abrir_Primeiro_Andar
+0000e6 30a1                      	cpi  primeiroAndar, 1   // Caso primero andar esteja como prioridade
+0000e7 f099                      	breq Abrir_Primeiro_Andar
                                  
-0000e7 30b1                      	cpi segundoAndar, 1    // Caso segundo andar esteja como prioridade
-0000e8 f0c1                      	breq Subir_Segundo_Andar
+0000e8 30b1                      	cpi segundoAndar, 1    // Caso segundo andar esteja como prioridade
+0000e9 f0c9                      	breq Subir_Segundo_Andar
                                  
-0000e9 30c1                      	cpi terceiroAndar, 1  // Caso terceiro andar esteja como prioridade
-0000ea f0d9                      	breq Subir_Terceiro_Andar
+0000ea 30c1                      	cpi terceiroAndar, 1  // Caso terceiro andar esteja como prioridade
+0000eb f0e1                      	breq Subir_Terceiro_Andar
                                  
-0000eb 30c2                      	cpi terceiroAndar, 2 // Caso terceiro andar tenha sido pressionado como não prioridade
-0000ec f0c9                      	breq Subir_Terceiro_Andar
+0000ec 30c2                      	cpi terceiroAndar, 2 // Caso terceiro andar tenha sido pressionado como não prioridade
+0000ed f0d1                      	breq Subir_Terceiro_Andar
                                  
-0000ed 30b2                      	cpi segundoAndar, 2 // Caso segundo andar tenha sido pressionado como não prioridade
-0000ee f091                      	breq Subir_Segundo_Andar
+0000ee 30b2                      	cpi segundoAndar, 2 // Caso segundo andar tenha sido pressionado como não prioridade
+0000ef f099                      	breq Subir_Segundo_Andar
                                  
-0000ef 30a2                      	cpi  primeiroAndar, 2 // Caso primeiro andar tenha sido pressionado como não prioridade
-0000f0 f049                      	breq Abrir_Primeiro_Andar
+0000f0 30a2                      	cpi  primeiroAndar, 2 // Caso primeiro andar tenha sido pressionado como não prioridade
+0000f1 f049                      	breq Abrir_Primeiro_Andar
                                  
-0000f1 3091                      	cpi terreo, 1   // Caso terreo esteja como prioridade
-0000f2 f0c1                      	breq Descer_Terreo
+0000f2 3091                      	cpi terreo, 1   // Caso terreo esteja como prioridade
+0000f3 f0c9                      	breq Descer_Terreo
                                  
-0000f3 3092                      	cpi terreo, 2 // Caso terro tenha sido pressionado como não prioridade
-0000f4 f0b1                      	breq Descer_Terreo
+0000f4 3092                      	cpi terreo, 2 // Caso terro tenha sido pressionado como não prioridade
+0000f5 f0b9                      	breq Descer_Terreo
                                  
-0000f5 9523                      	inc andarAtual        // Incrementar o andar atual
-0000f6 e0a0                      	ldi primeiroAndar, 0 // Define o registrador 'primeiroAndar' como não pressionado
-0000f7 e010                      	ldi count, 0		   // Define o registrador 'count' como 0
-0000f8 940c 00b4                 	jmp Elevador_Parado // Pula para elevador parado
+0000f6 952a                      	dec andarAtual        // Incrementar o andar atual
+0000f7 e0a0                      	ldi primeiroAndar, 0 // Define o registrador 'primeiroAndar' como não pressionado
+0000f8 e010                      	ldi count, 0		   // Define o registrador 'count' como 0
+0000f9 940c 00b1                 	jmp Elevador_Parado // Pula para elevador parado
                                  
                                  	Abrir_Primeiro_Andar:
-0000fa e051                      		ldi aguardando, 1        // Define o registrador 'aguardando' como 1
-0000fb e0a0                      		ldi primeiroAndar, 0    // Define o registrador 'primeiroAndar' como não pressionado
-0000fc e010                      		ldi count, 0           // Define o registrador 'count' como 0
-0000fd e001                      		ldi temp, 1           // Define o registrador 'temp' como 1
-0000fe b905                      		out PORTB, temp      // Mostra no display o valor 1
-0000ff 940c 004b                 		jmp main_lp         // Pula para o loop
+0000fb e051                      		ldi aguardando, 1        // Define o registrador 'aguardando' como 1
+0000fc 9523                      		inc andarAtual        // Incrementar o andar atual
+0000fd e0a0                      		ldi primeiroAndar, 0    // Define o registrador 'primeiroAndar' como não pressionado
+0000fe e010                      		ldi count, 0           // Define o registrador 'count' como 0
+0000ff e001                      		ldi temp, 1           // Define o registrador 'temp' como 1
+000100 b905                      		out PORTB, temp      // Mostra no display o valor 1
+000101 940c 004a                 		jmp loop         // Pula para o loop
                                  	
                                  	Subir_Segundo_Andar:	
-000101 e010                      		ldi count, 0             // Define o registrador 'count' como 0
-000102 9523                      		inc andarAtual          // Incrementar o andar atual
-000103 b925                      		out PORTB, andarAtual  // Mostra no display o valor 1
-000104 940c 004b                 		jmp main_lp           // Pula para o loop
+000103 e010                      		ldi count, 0             // Define o registrador 'count' como 0
+000104 9523                      		inc andarAtual          // Incrementar o andar atual
+000105 b925                      		out PORTB, andarAtual  // Mostra no display o valor 1
+000106 940c 004a                 		jmp loop           // Pula para o loop
                                  
                                  	Subir_Terceiro_Andar:
-000106 e010                      		ldi count, 0             // Define o registrador 'count' como 0
-000107 9523                      		inc andarAtual          // Incrementar o andar atual
-000108 b925                      		out PORTB, andarAtual  // Mostra no display o valor 1
-000109 940c 004b                 		jmp main_lp           // Pula para o loop
+000108 e010                      		ldi count, 0             // Define o registrador 'count' como 0
+000109 9523                      		inc andarAtual          // Incrementar o andar atual
+00010a b925                      		out PORTB, andarAtual  // Mostra no display o valor 1
+00010b 940c 004a                 		jmp loop           // Pula para o loop
                                  	
                                  	Descer_Terreo:
-00010b 9523                      		inc andarAtual          // Incrementar o andar atual
-00010c e010                      		ldi count, 0		   // Define o registrador 'count' como 0
-00010d e0a0                      		ldi primeiroAndar, 0   // Define o registrador 'primeiroAndar' como não pressionado
-00010e e041                      		ldi status, descendo  // Define o registrador 'status' como descendo
-00010f 940c 004b                 		jmp main_lp          // Pula para o loop
+00010d 9523                      		inc andarAtual          // Incrementar o andar atual
+00010e e013                      		ldi count, 3		   // Define o registrador 'count' como 0
+00010f e0a0                      		ldi primeiroAndar, 0   // Define o registrador 'primeiroAndar' como não pressionado
+000110 e041                      		ldi status, descendo  // Define o registrador 'status' como descendo
+000111 940c 004a                 		jmp loop          // Pula para o loop
                                  
                                  Chegou_Segundo_Andar:
                                  	
-000111 30b1                      	cpi segundoAndar, 1  // Caso segundo andar esteja como prioridade
-000112 f099                      	breq Abrir_Segundo_Andar
+000113 30b1                      	cpi segundoAndar, 1  // Caso segundo andar esteja como prioridade
+000114 f099                      	breq Abrir_Segundo_Andar
                                  
-000113 30c1                      	cpi terceiroAndar, 1  // Caso terceiro andar esteja como prioridade
-000114 f0c1                      	breq Subir_Terceiro_Andar2
+000115 30c1                      	cpi terceiroAndar, 1  // Caso terceiro andar esteja como prioridade
+000116 f0c9                      	breq Subir_Terceiro_Andar2
                                  
-000115 30c2                      	cpi terceiroAndar, 2  // Caso terceiro andar tenha sido pressionado como não prioridade
-000116 f0b1                      	breq Subir_Terceiro_Andar2
+000117 30c2                      	cpi terceiroAndar, 2  // Caso terceiro andar tenha sido pressionado como não prioridade
+000118 f0b9                      	breq Subir_Terceiro_Andar2
                                  
-000117 30b2                      	cpi segundoAndar, 2  // Caso segundo andar tenha sido pressionado como não prioridade
-000118 f069                      	breq Abrir_Segundo_Andar
+000119 30b2                      	cpi segundoAndar, 2  // Caso segundo andar tenha sido pressionado como não prioridade
+00011a f069                      	breq Abrir_Segundo_Andar
                                  
-000119 30a1                      	cpi primeiroAndar, 1  // Caso terceiro andar esteja como prioridade
-00011a f0b9                      	breq Descer_Elevador2
+00011b 30a1                      	cpi primeiroAndar, 1  // Caso terceiro andar esteja como prioridade
+00011c f0c1                      	breq Descer_Elevador2
                                  
-00011b 30a2                      	cpi primeiroAndar, 2  // Caso primeiro andar tenha sido pressionado como não prioridade
-00011c f0a9                      	breq Descer_Elevador2
+00011d 30a2                      	cpi primeiroAndar, 2  // Caso primeiro andar tenha sido pressionado como não prioridade
+00011e f0b1                      	breq Descer_Elevador2
                                  
-00011d 3091                      	cpi terreo, 1   // Caso terreo esteja como prioridade
-00011e f099                      	breq Descer_Elevador2
+00011f 3091                      	cpi terreo, 1   // Caso terreo esteja como prioridade
+000120 f0a1                      	breq Descer_Elevador2
                                  
-00011f 3092                      	cpi terreo, 2   // Caso terreo tenha sido pressionado como não prioridade
-000120 f089                      	breq Descer_Elevador2
+000121 3092                      	cpi terreo, 2   // Caso terreo tenha sido pressionado como não prioridade
+000122 f091                      	breq Descer_Elevador2
                                  
-000121 9523                      	inc andarAtual		  // Incrementar o andar atual
-000122 e0b0                      	ldi segundoAndar, 0	 // Define o registrador 'segundoAndar' como não pressionado
-000123 e010                      	ldi count, 0		   // Define o registrador 'count' como 0
-000124 940c 00b4                 	jmp Elevador_Parado // Pula para elevador parado
+000123 952a                      	dec andarAtual		  // Incrementar o andar atual
+000124 e0b0                      	ldi segundoAndar, 0	 // Define o registrador 'segundoAndar' como não pressionado
+000125 e010                      	ldi count, 0		   // Define o registrador 'count' como 0
+000126 940c 00b1                 	jmp Elevador_Parado // Pula para elevador parado
                                  
                                  	Abrir_Segundo_Andar:
-000126 e051                      		ldi aguardando, 1        // Define o registrador 'aguardando' como 1
-000127 e0b0                      		ldi segundoAndar, 0	    // Define o registrador 'segundoAndar' como não pressionado
-000128 e010                      		ldi count, 0		   // Define o registrador 'count' como 0
-000129 e002                      		ldi temp, 2			  // Define o registrador 'temp' como 2
-00012a b905                      		out PORTB, temp		 // Mostra no display o valor 2
-00012b 940c 004b                 		jmp main_lp			// Pula para o loop
+000128 e051                      		ldi aguardando, 1        // Define o registrador 'aguardando' como 1
+000129 9523                      		inc andarAtual        // Incrementar o andar atual
+00012a e0b0                      		ldi segundoAndar, 0	    // Define o registrador 'segundoAndar' como não pressionado
+00012b e010                      		ldi count, 0		   // Define o registrador 'count' como 0
+00012c e002                      		ldi temp, 2			  // Define o registrador 'temp' como 2
+00012d b905                      		out PORTB, temp		 // Mostra no display o valor 2
+00012e 940c 004a                 		jmp loop			// Pula para o loop
                                  	
                                  	Subir_Terceiro_Andar2:
-00012d e010                      		ldi count, 0		     // Define o registrador 'count' como 0
-00012e 9523                      		inc andarAtual		    // Incrementar o andar atual
-00012f b925                      		out PORTB, andarAtual  // Mostra no display o valor 2
-000130 940c 004b                 		jmp main_lp           // Pula para o loop
+000130 e010                      		ldi count, 0		     // Define o registrador 'count' como 0
+000131 9523                      		inc andarAtual		    // Incrementar o andar atual
+000132 b925                      		out PORTB, andarAtual  // Mostra no display o valor 2
+000133 940c 004a                 		jmp loop           // Pula para o loop
                                  	
                                  	Descer_Elevador2:
-000132 9523                      		inc andarAtual		       // Incrementar o andar atual
-000133 e010                      		ldi count, 0		      // Define o registrador 'count' como 0
-000134 e0b0                      		ldi segundoAndar, 0	     // Define o registrador 'segundoAndar' como não pressionado
-000135 e041                      		ldi status, descendo    // Define o registrador 'status' como descendo
-000136 940c 004b                 		jmp main_lp            // Pula para o loop
+000135 9523                      		inc andarAtual		       // Incrementar o andar atual
+000136 e013                      		ldi count, 3		      // Define o registrador 'count' como 0
+000137 e0b0                      		ldi segundoAndar, 0	     // Define o registrador 'segundoAndar' como não pressionado
+000138 e041                      		ldi status, descendo    // Define o registrador 'status' como descendo
+000139 940c 004a                 		jmp loop            // Pula para o loop
                                  
                                  
                                  
                                  Chegou_Terceiro_Andar:
-000138 30c1                      	cpi terceiroAndar, 1  // Caso segundo andar esteja como prioridade
-000139 f099                      	breq Abrir_Terceiro_Andar3
+00013b 30c1                      	cpi terceiroAndar, 1  // Caso segundo andar esteja como prioridade
+00013c f091                      	breq Abrir_Terceiro_Andar3
                                  
-00013a 30c2                      	cpi terceiroAndar, 2 // Caso terceiro andar tenha sido pressionado como não prioridade
-00013b f089                      	breq Abrir_Terceiro_Andar3
+00013d 30c2                      	cpi terceiroAndar, 2 // Caso terceiro andar tenha sido pressionado como não prioridade
+00013e f081                      	breq Abrir_Terceiro_Andar3
                                  	 
-00013c 30b1                      	cpi segundoAndar, 1  // Caso segundo andar esteja como prioridade
-00013d f0b1                      	breq Descer_Elevador3
+00013f 30b1                      	cpi segundoAndar, 1  // Caso segundo andar esteja como prioridade
+000140 f0b1                      	breq Descer_Elevador3
                                  
-00013e 30b2                      	cpi segundoAndar, 2 // Caso segundo andar tenha sido pressionado como não prioridade
-00013f f0a1                      	breq Descer_Elevador3
+000141 30b2                      	cpi segundoAndar, 2 // Caso segundo andar tenha sido pressionado como não prioridade
+000142 f0a1                      	breq Descer_Elevador3
                                  
-000140 30a1                      	cpi primeiroAndar, 1 // Caso primeiro andar esteja como prioridade
-000141 f091                      	breq Descer_Elevador3
+000143 30a1                      	cpi primeiroAndar, 1 // Caso primeiro andar esteja como prioridade
+000144 f091                      	breq Descer_Elevador3
                                  
-000142 30a2                      	cpi primeiroAndar, 2 // Caso primeiro andar tenha sido pressionado como não prioridade
-000143 f081                      	breq Descer_Elevador3
+000145 30a2                      	cpi primeiroAndar, 2 // Caso primeiro andar tenha sido pressionado como não prioridade
+000146 f081                      	breq Descer_Elevador3
                                  
-000144 3091                      	cpi terreo, 1   // Caso terreo  esteja como prioridade
-000145 f071                      	breq Descer_Elevador3
+000147 3091                      	cpi terreo, 1   // Caso terreo  esteja como prioridade
+000148 f071                      	breq Descer_Elevador3
                                  
-000146 3092                      	cpi terreo, 2 // Caso terreo tenha sido pressionado como não prioridade
-000147 f061                      	breq Descer_Elevador3
+000149 3092                      	cpi terreo, 2 // Caso terreo tenha sido pressionado como não prioridade
+00014a f061                      	breq Descer_Elevador3
                                  
-000148 9523                      	inc andarAtual		    // Incrementar o andar atual
-000149 e0c0                      	ldi terceiroAndar,  0  // Define o registrador 'terceiroAndar' como não pressionado
-00014a e010                      	ldi count, 0		   // Define o registrador 'count' como 0
-00014b 940c 00b4                 	jmp Elevador_Parado   // Pula para elevador parado
+00014b e0c0                      	ldi terceiroAndar,  0  // Define o registrador 'terceiroAndar' como não pressionado
+00014c e010                      	ldi count, 0		   // Define o registrador 'count' como 0
+00014d 940c 00b1                 	jmp Elevador_Parado   // Pula para elevador parado
                                  
                                  
                                  	Abrir_Terceiro_Andar3:
-00014d e051                      		ldi aguardando, 1	        // Define o registrador 'aguardando' como 1
-00014e e0c0                      		ldi terceiroAndar,  0      // Define o registrador 'terceiroAndar' como não pressionado
-00014f e010                      		ldi count, 0		      // Define o registrador 'count' como 0
-000150 e003                      		ldi temp, 3			     // Define o registrador 'temp' como 3
-000151 b905                      		out PORTB, temp		    // Mostra no display o valor 3
-000152 940c 004b                 		jmp main_lp            // Pula para o loop
+00014f e051                      		ldi aguardando, 1	        // Define o registrador 'aguardando' como 1
+000150 9523                      		inc andarAtual        // Incrementar o andar atual
+000151 e0c0                      		ldi terceiroAndar,  0      // Define o registrador 'terceiroAndar' como não pressionado
+000152 e010                      		ldi count, 0		      // Define o registrador 'count' como 0
+000153 e003                      		ldi temp, 3			     // Define o registrador 'temp' como 3
+000154 b905                      		out PORTB, temp		    // Mostra no display o valor 3
+000155 940c 004a                 		jmp loop            // Pula para o loop
                                  
                                  	Descer_Elevador3:
-000154 9523                      		inc andarAtual		      // Incrementar o andar atual
-000155 e010                      		ldi count, 0		     // Define o registrador 'count' como 0
-000156 e0c0                      		ldi terceiroAndar, 0    // Define o registrador 'terceiroAndar' como não pressionado
-000157 e041                      		ldi status, descendo   // Define o registrador 'status' como descendo
-000158 940c 004b                 		jmp main_lp			  // Pula para o loop
+000157 9523                      		inc andarAtual		      // Incrementar o andar atual
+000158 e013                      		ldi count, 3		     // Define o registrador 'count' como 0
+000159 e0c0                      		ldi terceiroAndar, 0    // Define o registrador 'terceiroAndar' como não pressionado
+00015a e041                      		ldi status, descendo   // Define o registrador 'status' como descendo
+00015b 940c 004a                 		jmp loop			  // Pula para o loop
                                  
                                  
+                                 Parou_no_Terceiro1:
+00015d 30b1                      	cpi segundoAndar, 1  // Caso segundo andar esteja como prioridade
+00015e f071                      	breq Descer_Elevador4
+                                 
+00015f 30b2                      	cpi segundoAndar, 2 // Caso segundo andar tenha sido pressionado como não prioridade
+000160 f061                      	breq Descer_Elevador4
+                                 
+000161 30a1                      	cpi primeiroAndar, 1 // Caso primeiro andar esteja como prioridade
+000162 f051                      	breq Descer_Elevador4
+                                 
+000163 30a2                      	cpi primeiroAndar, 2 // Caso primeiro andar tenha sido pressionado como não prioridade
+000164 f041                      	breq Descer_Elevador4
+                                 
+000165 3091                      	cpi terreo, 1   // Caso terreo  esteja como prioridade
+000166 f031                      	breq Descer_Elevador4
+                                 
+000167 3092                      	cpi terreo, 2 // Caso terreo tenha sido pressionado como não prioridade
+000168 f021                      	breq Descer_Elevador4
+                                 
+                                 
+000169 e0c0                      	ldi terceiroAndar,  0  // Define o registrador 'terceiroAndar' como não pressionado
+00016a e010                      	ldi count, 0		   // Define o registrador 'count' como 0
+00016b 940c 00b1                 	jmp Elevador_Parado   // Pula para elevador parado
+                                 
+                                 
+                                 	Descer_Elevador4:
+00016d e013                      		ldi count, 3		     // Define o registrador 'count' como 0
+00016e e0c0                      		ldi terceiroAndar, 0    // Define o registrador 'terceiroAndar' como não pressionado
+00016f e041                      		ldi status, descendo   // Define o registrador 'status' como descendo
+000170 940c 004a                 		jmp loop			  // Pula para o loop
                                  
                                  
                                  Elevador_Descendo:
-00015a 3013                      	cpi count, 3  // Quando registrador 'count' = 3, aciona rotina
-00015b f011                      	breq continue1 
+000172 3013                      	cpi count, 3  // Quando registrador 'count' = 3, aciona rotina
+000173 f011                      	breq continue1 
                                  
-00015c 940c 004b                 	jmp main_lp   // Pula para o loop
+000174 940c 004a                 	jmp loop   // Pula para o loop
                                  
                                  	continue1:  // Rotina acionada
                                  
-00015e 3023                      	cpi andarAtual, 3  // Caso andarAtual = Terceiro Andar
-00015f f041                      	breq Chegou_Segundo_Andar1
+000176 3023                      	cpi andarAtual, 3  // Caso andarAtual = Terceiro Andar
+000177 f061                      	breq Chegou_Segundo_Andar1
                                  
-000160 3022                      	cpi andarAtual, 2 // Caso andarAtual = Segundo Andar
-000161 f191                      	breq Chegou_Primeiro_Andar1
+000178 3022                      	cpi andarAtual, 2 // Caso andarAtual = Segundo Andar
+000179 f1b9                      	breq Chegou_Primeiro_Andar1
                                  
-000162 3021                      	cpi andarAtual, 1 // Caso andarAtual = Primeiro Andar
-000163 f011                      	breq Chegou_Terreo_Andar1l
-000164 940c 004b                 	jmp main_lp
+00017a 3021                      	cpi andarAtual, 1 // Caso andarAtual = Primeiro Andar
+00017b f021                      	breq Chegou_Terreo_Andar1l
+                                 
+00017c 3020                      	cpi andarAtual, 0
+00017d f021                      	breq Parou_no_Terreo
+                                 
+00017e 940c 004a                 	jmp loop
                                  
                                  	Chegou_Terreo_Andar1l:  // Caso andarAtual = Primeiro Andar
-000166 940c 01bb                 	jmp Chegou_Terreo_Andar1
+000180 940c 01d9                 	jmp Chegou_Terreo_Andar1
+                                 
+                                 	Parou_no_Terreo:       // Caso andarAtual = Terreo
+000182 940c 01fc                 	jmp Parou_no_Terreo1
                                  
                                  
                                  Chegou_Segundo_Andar1:
-000168 30b1                      	cpi segundoAndar, 1  // Caso segundo andar esteja como prioridade
-000169 f099                      	breq Abrir_Segundo_Andar4
+000184 30b1                      	cpi segundoAndar, 1  // Caso segundo andar esteja como prioridade
+000185 f099                      	breq Abrir_Segundo_Andar4
                                  
-00016a 30b2                      	cpi segundoAndar, 2 // Caso segundo andar tenha sido pressionado como não prioridade
-00016b f089                      	breq Abrir_Segundo_Andar4
+000186 30b2                      	cpi segundoAndar, 2 // Caso segundo andar tenha sido pressionado como não prioridade
+000187 f089                      	breq Abrir_Segundo_Andar4
                                  
-00016c 30a1                      	cpi primeiroAndar, 1  // Caso primeiro andar esteja como prioridade
-00016d f0b1                      	breq Descer_Primeiro_Andar
+000188 30a1                      	cpi primeiroAndar, 1  // Caso primeiro andar esteja como prioridade
+000189 f0b9                      	breq Descer_Primeiro_Andar
                                  
-00016e 30a2                      	cpi primeiroAndar, 2 // Caso primeiro andar tenha sido pressionado como não prioridade
-00016f f0a1                      	breq Descer_Primeiro_Andar
+00018a 30a2                      	cpi primeiroAndar, 2 // Caso primeiro andar tenha sido pressionado como não prioridade
+00018b f0a9                      	breq Descer_Primeiro_Andar
                                  
-000170 3091                      	cpi terreo, 1  // Caso terreo esteja como prioridade
-000171 f0b9                      	breq Descer_Terreo2
+00018c 3091                      	cpi terreo, 1  // Caso terreo esteja como prioridade
+00018d f0c1                      	breq Descer_Terreo2
                                  
-000172 3092                      	cpi terreo, 2  // Caso terreo esteja como prioridade
-000173 f0a9                      	breq Descer_Terreo2
+00018e 3092                      	cpi terreo, 2  // Caso terreo esteja como prioridade
+00018f f0b1                      	breq Descer_Terreo2
                                  
-000174 30c1                      	cpi terceiroAndar, 1  // Caso tereiro andar esteja como prioridade
-000175 f0c1                      	breq Subir
+000190 30c1                      	cpi terceiroAndar, 1  // Caso tereiro andar esteja como prioridade
+000191 f0c9                      	breq Subir
                                  
-000176 30c2                      	cpi terceiroAndar, 2 // Caso terceiro andar tenha sido pressionado como não prioridade
-000177 f0b1                      	breq Subir
+000192 30c2                      	cpi terceiroAndar, 2 // Caso terceiro andar tenha sido pressionado como não prioridade
+000193 f0b9                      	breq Subir
                                  
-000178 952a                      	dec andarAtual		   // Decrementa o andar atual
-000179 e0b0                      	ldi segundoAndar,  0  // Define o registrador 'segundoAndar' como não pressionado
-00017a e010                      	ldi count, 0		   // Define o registrador 'count' como 0
-00017b 940c 00b4                 	jmp Elevador_Parado  // Pula para elevador parado
+000194 9523                      	inc andarAtual		   // Decrementa o andar atual
+000195 e0b0                      	ldi segundoAndar,  0  // Define o registrador 'segundoAndar' como não pressionado
+000196 e010                      	ldi count, 0		   // Define o registrador 'count' como 0
+000197 940c 00b1                 	jmp Elevador_Parado  // Pula para elevador parado
                                  
                                  
                                  
                                  	Abrir_Segundo_Andar4:
-00017d e051                      		ldi aguardando, 1          // Define o registrador 'aguardando' como 1
-00017e e0b0                      		ldi segundoAndar, 0	      // Define o registrador 'segundoAndar' como não pressionado
-00017f e010                      		ldi count, 0		     // Define o registrador 'count' como 0
-000180 e002                      		ldi temp, 2			    // Define o registrador 'temp' como 2
-000181 b905                      		out PORTB, temp		   // Mostra no display o valor 2
-000182 940c 004b                 		jmp main_lp			  // Pula para o loop
+000199 e051                      		ldi aguardando, 1          // Define o registrador 'aguardando' como 1
+00019a 952a                      		dec andarAtual		   // Decrementa o andar atual
+00019b e0b0                      		ldi segundoAndar, 0	      // Define o registrador 'segundoAndar' como não pressionado
+00019c e010                      		ldi count, 0		     // Define o registrador 'count' como 0
+00019d e002                      		ldi temp, 2			    // Define o registrador 'temp' como 2
+00019e b905                      		out PORTB, temp		   // Mostra no display o valor 2
+00019f 940c 004a                 		jmp loop			  // Pula para o loop
                                  
                                  	Descer_Primeiro_Andar:
-000184 e010                      		ldi count, 0              // Define o registrador 'count' como 0
-000185 952a                      		dec andarAtual		     // Decrementa o andar atual
-000186 b925                      		out PORTB, andarAtual   // Mostra no display o valor 2
-000187 940c 004b                 		jmp main_lp       	   // Pula para o loop
+0001a1 e010                      		ldi count, 0              // Define o registrador 'count' como 0
+0001a2 952a                      		dec andarAtual		     // Decrementa o andar atual
+0001a3 b925                      		out PORTB, andarAtual   // Mostra no display o valor 2
+0001a4 940c 004a                 		jmp loop       	   // Pula para o loop
                                  
                                  	Descer_Terreo2:
-000189 e010                      		ldi count, 0              // Define o registrador 'count' como 0
-00018a 952a                      		dec andarAtual		     // Decrementa o andar atual
-00018b b925                      		out PORTB, andarAtual   // Mostra no display o valor 2
-00018c 940c 004b                 		jmp main_lp			   // Pula para o loop
+0001a6 e010                      		ldi count, 0              // Define o registrador 'count' como 0
+0001a7 952a                      		dec andarAtual		     // Decrementa o andar atual
+0001a8 b925                      		out PORTB, andarAtual   // Mostra no display o valor 2
+0001a9 940c 004a                 		jmp loop			   // Pula para o loop
                                  
                                  	Subir:
-00018e 952a                      		dec andarAtual         // Decrementa o andar atual
-00018f e010                      		ldi count, 0		   // Define o registrador 'count' como 0
-000190 e0b0                      		ldi segundoAndar, 0   // Define o registrador 'terceiroAndar' como não pressionado
-000191 e042                      		ldi status, subindo  // Define o registrador 'status' como subindo
-000192 940c 004b                 		jmp main_lp		    // Pula para o loop
+0001ab 952a                      		dec andarAtual         // Decrementa o andar atual
+0001ac e013                      		ldi count, 3		   // Define o registrador 'count' como 0
+0001ad e0b0                      		ldi segundoAndar, 0   // Define o registrador 'terceiroAndar' como não pressionado
+0001ae e042                      		ldi status, subindo  // Define o registrador 'status' como subindo
+0001af 940c 004a                 		jmp loop		    // Pula para o loop
                                  						   
                                  
                                  
                                  Chegou_Primeiro_Andar1:
-000194 30a1                      	cpi primeiroAndar, 1  // Caso primeiro andar esteja como prioridade
-000195 f099                      	breq Abrir_Primeiro_Andar5
+0001b1 30a1                      	cpi primeiroAndar, 1  // Caso primeiro andar esteja como prioridade
+0001b2 f099                      	breq Abrir_Primeiro_Andar5
                                  
-000196 30a2                      	cpi primeiroAndar, 2  // Caso primeiro andar tenha sido pressionado como não prioridade
-000197 f089                      	breq Abrir_Primeiro_Andar5
+0001b3 30a2                      	cpi primeiroAndar, 2  // Caso primeiro andar tenha sido pressionado como não prioridade
+0001b4 f089                      	breq Abrir_Primeiro_Andar5
                                  
-000198 3091                      	cpi terreo, 1        // Caso terreo esteja como prioridade
-000199 f0b1                      	breq Descer_Terreo1
+0001b5 3091                      	cpi terreo, 1        // Caso terreo esteja como prioridade
+0001b6 f0b9                      	breq Descer_Terreo1
                                  
-00019a 3092                      	cpi terreo, 2         // Caso terreo tenha sido pressionado como não prioridade
-00019b f0a1                      	breq Descer_Terreo1
+0001b7 3092                      	cpi terreo, 2         // Caso terreo tenha sido pressionado como não prioridade
+0001b8 f0a9                      	breq Descer_Terreo1
                                  
-00019c 30b1                      	cpi segundoAndar, 1  // Caso segundo andar esteja como prioridade
-00019d f0b9                      	breq Subir1
+0001b9 30b1                      	cpi segundoAndar, 1  // Caso segundo andar esteja como prioridade
+0001ba f0c1                      	breq Subir1
                                  
-00019e 30b2                      	cpi segundoAndar, 2  // Caso segundo andar tenha sido pressionado como não prioridade
-00019f f0a9                      	breq Subir1
+0001bb 30b2                      	cpi segundoAndar, 2  // Caso segundo andar tenha sido pressionado como não prioridade
+0001bc f0b1                      	breq Subir1
                                  
-0001a0 30c1                      	cpi terceiroAndar, 1  // Caso terceiro andar esteja como prioridade
-0001a1 f099                      	breq Subir1
+0001bd 30c1                      	cpi terceiroAndar, 1  // Caso terceiro andar esteja como prioridade
+0001be f0a1                      	breq Subir1
                                  
-0001a2 30c2                      	cpi terceiroAndar, 2  // Caso terceiro andar tenha sido pressionado como não prioridade
-0001a3 f089                      	breq Subir1
+0001bf 30c2                      	cpi terceiroAndar, 2  // Caso terceiro andar tenha sido pressionado como não prioridade
+0001c0 f091                      	breq Subir1
                                  
-0001a4 952a                      	dec andarAtual            // Decrementa o andar atual
-0001a5 e0a0                      	ldi primeiroAndar,  0	 // Define o registrador 'primeiroAndar' como não pressionado
-0001a6 e010                      	ldi count, 0            // Define o registrador 'count' como 0
-0001a7 940c 00b4                 	jmp Elevador_Parado	   // Pula para elevador parado
+0001c1 9523                      	inc andarAtual            // Decrementa o andar atual
+0001c2 e0a0                      	ldi primeiroAndar,  0	 // Define o registrador 'primeiroAndar' como não pressionado
+0001c3 e010                      	ldi count, 0            // Define o registrador 'count' como 0
+0001c4 940c 00b1                 	jmp Elevador_Parado	   // Pula para elevador parado
                                  
                                  
                                  	Abrir_Primeiro_Andar5:
-0001a9 e051                      		ldi aguardando, 1          // Define o registrador 'aguardando' como 1
-0001aa e0a0                      		ldi primeiroAndar, 0      // Define o registrador 'primeiroAndar' como não pressionado
-0001ab e010                      		ldi count, 0		     // Define o registrador 'count' como 0
-0001ac e001                      		ldi temp, 1			    // Define o registrador 'temp' como 1
-0001ad b905                      		out PORTB, temp		   // Mostra no display o valor 1
-0001ae 940c 004b                 		jmp main_lp			  // Pula para o loop
+0001c6 e051                      		ldi aguardando, 1          // Define o registrador 'aguardando' como 1
+0001c7 952a                      		dec andarAtual		   // Decrementa o andar atual
+0001c8 e0a0                      		ldi primeiroAndar, 0      // Define o registrador 'primeiroAndar' como não pressionado
+0001c9 e010                      		ldi count, 0		     // Define o registrador 'count' como 0
+0001ca e001                      		ldi temp, 1			    // Define o registrador 'temp' como 1
+0001cb b905                      		out PORTB, temp		   // Mostra no display o valor 1
+0001cc 940c 004a                 		jmp loop			  // Pula para o loop
                                  
                                  	Descer_Terreo1:
-0001b0 e010                      		ldi count, 0             // Define o registrador 'count' como 0
-0001b1 952a                      		dec andarAtual		    // Decrementa o andar atual
-0001b2 b925                      		out PORTB, andarAtual  // Mostra no display o valor 1
-0001b3 940c 004b                 		jmp main_lp			  // Pula para o loop
+0001ce e010                      		ldi count, 0             // Define o registrador 'count' como 0
+0001cf 952a                      		dec andarAtual		    // Decrementa o andar atual
+0001d0 b925                      		out PORTB, andarAtual  // Mostra no display o valor 1
+0001d1 940c 004a                 		jmp loop			  // Pula para o loop
                                  
                                  	Subir1:
-0001b5 952a                      		dec andarAtual            // Decrementa o andar atual
-0001b6 e010                      		ldi count, 0		     // Define o registrador 'count' como 0
-0001b7 e0a0                      		ldi primeiroAndar, 0    // Define o registrador 'primeiroAndar' como não pressionado
-0001b8 e042                      		ldi status, subindo	   // Define o registrador 'status' como subindo
-0001b9 940c 004b                 		jmp main_lp			  // Pula para o loop
+0001d3 952a                      		dec andarAtual            // Decrementa o andar atual
+0001d4 e013                      		ldi count, 3		     // Define o registrador 'count' como 0
+0001d5 e0a0                      		ldi primeiroAndar, 0    // Define o registrador 'primeiroAndar' como não pressionado
+0001d6 e042                      		ldi status, subindo	   // Define o registrador 'status' como subindo
+0001d7 940c 004a                 		jmp loop			  // Pula para o loop
                                  
                                  
                                  
                                  Chegou_Terreo_Andar1:
-0001bb 3091                      	cpi terreo, 1 // Caso primeiro andar esteja como prioridade
-0001bc f099                      	breq Abrir_Terreo
+0001d9 3091                      	cpi terreo, 1 // Caso terreo andar esteja como prioridade
+0001da f099                      	breq Abrir_Terreo
                                  
-0001bd 3092                      	cpi terreo, 2  // Caso terreo tenha sido pressionado como não prioridade
-0001be f089                      	breq Abrir_Terreo
+0001db 3092                      	cpi terreo, 2  // Caso terreo tenha sido pressionado como não prioridade
+0001dc f089                      	breq Abrir_Terreo
                                  
-0001bf 30a1                      	cpi primeiroAndar, 1  // Caso primeiro andar esteja como prioridade
-0001c0 f0b1                      	breq subir2
+0001dd 30a1                      	cpi primeiroAndar, 1  // Caso primeiro andar esteja como prioridade
+0001de f0b9                      	breq subir2
                                  
-0001c1 30a2                      	cpi primeiroAndar, 2   // Caso primeiro andar tenha sido pressionado como não prioridade
-0001c2 f0a1                      	breq subir2
+0001df 30a2                      	cpi primeiroAndar, 2   // Caso primeiro andar tenha sido pressionado como não prioridade
+0001e0 f0a9                      	breq subir2
                                  
-0001c3 30b1                      	cpi segundoAndar, 1  // Caso primeiro andar esteja como prioridade
-0001c4 f091                      	breq subir2
+0001e1 30b1                      	cpi segundoAndar, 1  // Caso primeiro andar esteja como prioridade
+0001e2 f099                      	breq subir2
                                  
-0001c5 30b2                      	cpi segundoAndar, 2   // Caso primeiro andar tenha sido pressionado como não prioridade
-0001c6 f081                      	breq subir2
+0001e3 30b2                      	cpi segundoAndar, 2   // Caso primeiro andar tenha sido pressionado como não prioridade
+0001e4 f089                      	breq subir2
                                  
-0001c7 30c1                      	cpi terceiroAndar, 1  // Caso primeiro andar esteja como prioridade
-0001c8 f071                      	breq subir2
+0001e5 30c1                      	cpi terceiroAndar, 1  // Caso primeiro andar esteja como prioridade
+0001e6 f079                      	breq subir2
                                  
-0001c9 30c2                      	cpi terceiroAndar, 2   // Caso primeiro andar tenha sido pressionado como não prioridade
-0001ca f061                      	breq subir2
+0001e7 30c2                      	cpi terceiroAndar, 2   // Caso primeiro andar tenha sido pressionado como não prioridade
+0001e8 f069                      	breq subir2
                                  	
-0001cb 952a                      	dec andarAtual         // Decrementa o andar atual
-0001cc e090                      	ldi terreo,  0		  // Define o registrador 'terreo' como não pressionado
-0001cd e010                      	ldi count, 0 		 // Define o registrador 'count' como 0
-0001ce 940c 00b4                 	jmp Elevador_Parado	// Pula para elevador parado
+0001e9 9523                      	inc andarAtual         // Decrementa o andar atual
+0001ea e090                      	ldi terreo,  0		  // Define o registrador 'terreo' como não pressionado
+0001eb e010                      	ldi count, 0 		 // Define o registrador 'count' como 0
+0001ec 940c 00b1                 	jmp Elevador_Parado	// Pula para elevador parado
                                  
                                  	Abrir_Terreo:
-0001d0 e051                      		ldi aguardando, 1       // Define o registrador 'aguardando' como 1
-0001d1 e090                      		ldi terreo, 0	       // Define o registrador 'terreo' como não pressionado
-0001d2 e010                      		ldi count, 0	      // Define o registrador 'count' como 0
-0001d3 e000                      		ldi temp, 0		     // Define o registrador 'temp' como 0
-0001d4 b905                      		out PORTB, temp	    // Mostra no display o valor 0
-0001d5 940c 004b                 		jmp main_lp		   // Pula para o loop
+0001ee e051                      		ldi aguardando, 1       // Define o registrador 'aguardando' como 1
+0001ef 952a                      		dec andarAtual		   // Decrementa o andar atual
+0001f0 e090                      		ldi terreo, 0	       // Define o registrador 'terreo' como não pressionado
+0001f1 e010                      		ldi count, 0	      // Define o registrador 'count' como 0
+0001f2 e000                      		ldi temp, 0		     // Define o registrador 'temp' como 0
+0001f3 b905                      		out PORTB, temp	    // Mostra no display o valor 0
+0001f4 940c 004a                 		jmp loop		   // Pula para o loop
                                  
                                  	subir2:
-0001d7 952a                      		dec andarAtual		     // Decrementa o andar atual
-0001d8 e010                      		ldi count, 0		    // Define o registrador 'count' como 0
-0001d9 e090                      		ldi terreo, 0		   // Define o registrador 'terreo' como não pressionado
-0001da e042                      		ldi status, subindo   // Define o registrador 'status' como subindo
-0001db 940c 004b                 		jmp main_lp          // Pula para o loop
+0001f6 952a                      		dec andarAtual		     // Decrementa o andar atual
+0001f7 e013                      		ldi count, 3		    // Define o registrador 'count' como 0
+0001f8 e090                      		ldi terreo, 0		   // Define o registrador 'terreo' como não pressionado
+0001f9 e042                      		ldi status, subindo   // Define o registrador 'status' como subindo
+0001fa 940c 004a                 		jmp loop          // Pula para o loop
+                                 
+                                 
+                                 Parou_no_Terreo1:
+0001fc 30a1                      	cpi primeiroAndar, 1  // Caso primeiro andar esteja como prioridade
+0001fd f071                      	breq subir3
+                                 
+0001fe 30a2                      	cpi primeiroAndar, 2   // Caso primeiro andar tenha sido pressionado como não prioridade
+0001ff f061                      	breq subir3
+                                 
+000200 30b1                      	cpi segundoAndar, 1  // Caso primeiro andar esteja como prioridade
+000201 f051                      	breq subir3
+                                 
+000202 30b2                      	cpi segundoAndar, 2   // Caso primeiro andar tenha sido pressionado como não prioridade
+000203 f041                      	breq subir3
+                                 
+000204 30c1                      	cpi terceiroAndar, 1  // Caso primeiro andar esteja como prioridade
+000205 f031                      	breq subir3
+                                 
+000206 30c2                      	cpi terceiroAndar, 2   // Caso primeiro andar tenha sido pressionado como não prioridade
+000207 f021                      	breq subir3
+                                 	
+                                 
+000208 e090                      	ldi terreo,  0		  // Define o registrador 'terreo' como não pressionado
+000209 e010                      	ldi count, 0 		 // Define o registrador 'count' como 0
+00020a 940c 00b1                 	jmp Elevador_Parado	// Pula para elevador parado
+                                 
+                                 	subir3:
+00020c e013                      		ldi count, 3		    // Define o registrador 'count' como 0
+00020d e090                      		ldi terreo, 0		   // Define o registrador 'terreo' como não pressionado
+00020e e042                      		ldi status, subindo   // Define o registrador 'status' como subindo
+00020f 940c 004a                 		jmp loop          // Pula para o loop
+                                 
                                  
                                  
                                  Botao_Abrir_Porta_Pressionado:
-0001dd 940c 004b                 	jmp main_lp 
+                                 
+000211 3051                      	cpi aguardando,1           // Se 'aguardando' estiver acionado, mantem a porta aberta
+000212 f011                      	breq manter_porta_aberta  
+000213 940c 004a                 	jmp loop 
+                                 
+                                 	manter_porta_aberta:          // Segura a porta enquando estiver com o botao pressionado
+000215 9944                      	sbic PORTC, Botao_Abrir_Porta
+000216 cffa                      	rjmp Botao_Abrir_Porta_Pressionado
+                                 
+000217 e01a                      	ldi count, 10 // Quando o botão para de ser pressionado, define o 'count' para e fecha a porta
+000218 940c 004a                 	jmp loop 
+                                 	
                                  
                                  Botao_Fechar_Porta_Pressionado:
-0001df 982c                      	cbi PORTB, LED          // Desliga o LED
-0001e0 982e                      	cbi PORTB, BUZZER	   // Desliga BUZZER
-0001e1 e050                      	ldi aguardando, 0     // Define registrador 'aguardando'' como 0
-0001e2 e010                      	ldi count, 0         // Define o registrador 'count' como 0
+00021a 982c                      	cbi PORTB, LED          // Desliga o LED
+00021b 982e                      	cbi PORTB, BUZZER	   // Desliga BUZZER
+00021c e050                      	ldi aguardando, 0     // Define registrador 'aguardando'' como 0
+00021d e010                      	ldi count, 0         // Define o registrador 'count' como 0
 
 
 RESOURCE USE INFORMATION
@@ -1735,37 +1809,37 @@ counted separately from r26..r31 here.
 "ATmega328P" register use summary:
 x  :   0 y  :   0 z  :   0 r0 :   0 r1 :   0 r2 :   0 r3 :   0 r4 :   0 
 r5 :   0 r6 :   0 r7 :   0 r8 :   0 r9 :   0 r10:   0 r11:   0 r12:   0 
-r13:   0 r14:   0 r15:   0 r16:  54 r17:  34 r18:  33 r19:   0 r20:  22 
-r21:   9 r22:   0 r23:   0 r24:   0 r25:  18 r26:  21 r27:  21 r28:  18 
+r13:   0 r14:   0 r15:   0 r16:  52 r17:  39 r18:  41 r19:   0 r20:  24 
+r21:  10 r22:   0 r23:   0 r24:   0 r25:  22 r26:  25 r27:  25 r28:  22 
 r29:   2 r30:   2 r31:   2 
 Registers used: 12 out of 35 (34.3%)
 
 "ATmega328P" instruction use summary:
 .lds  :   0 .sts  :   0 adc   :   0 add   :   0 adiw  :   0 and   :   0 
 andi  :   0 asr   :   0 bclr  :   0 bld   :   0 brbc  :   0 brbs  :   0 
-brcc  :   1 brcs  :   0 break :   0 breq  :  75 brge  :   1 brhc  :   0 
+brcc  :   1 brcs  :   0 break :   0 breq  :  90 brge  :   1 brhc  :   0 
 brhs  :   0 brid  :   0 brie  :   0 brlo  :   1 brlt  :   0 brmi  :   0 
 brne  :   0 brpl  :   0 brsh  :   0 brtc  :   0 brts  :   0 brvc  :   0 
-brvs  :   0 bset  :   0 bst   :   0 call  :   8 cbi   :   5 cbr   :   0 
+brvs  :   0 bset  :   0 bst   :   0 call  :   6 cbi   :   5 cbr   :   0 
 clc   :   0 clh   :   0 cli   :   0 cln   :   0 clr   :   0 cls   :   0 
 clt   :   0 clv   :   0 clz   :   0 com   :   0 cp    :   3 cpc   :   0 
-cpi   :  74 cpse  :   0 dec   :   9 eor   :   0 fmul  :   0 fmuls :   0 
-fmulsu:   0 icall :   0 ijmp  :   0 in    :   1 inc   :  10 jmp   :  46 
-ld    :   0 ldd   :   0 ldi   : 102 lds   :   1 lpm   :   0 lsl   :   0 
+cpi   :  89 cpse  :   0 dec   :  11 eor   :   0 fmul  :   0 fmuls :   0 
+fmulsu:   0 icall :   0 ijmp  :   0 in    :   1 inc   :  13 jmp   :  53 
+ld    :   0 ldd   :   0 ldi   : 113 lds   :   1 lpm   :   0 lsl   :   0 
 lsr   :   0 mov   :   0 movw  :   0 mul   :   0 muls  :   0 mulsu :   0 
-neg   :   0 nop   :   0 or    :   0 ori   :   0 out   :  20 pop   :   2 
-push  :   2 rcall :   0 ret   :   1 reti  :   1 rjmp  :  19 rol   :   0 
-ror   :   0 sbc   :   0 sbci  :   2 sbi   :   2 sbic  :  10 sbis  :   0 
+neg   :   0 nop   :   0 or    :   0 ori   :   0 out   :  19 pop   :   2 
+push  :   2 rcall :   2 ret   :   1 reti  :   1 rjmp  :  20 rol   :   0 
+ror   :   0 sbc   :   0 sbci  :   2 sbi   :   2 sbic  :  11 sbis  :   0 
 sbiw  :   0 sbr   :   1 sbrc  :   0 sbrs  :   0 sec   :   0 seh   :   0 
 sei   :   2 sen   :   0 ser   :   0 ses   :   0 set   :   0 sev   :   0 
 sez   :   0 sleep :   0 spm   :   0 st    :   0 std   :   0 sts   :   5 
 sub   :   0 subi  :   1 swap  :   0 tst   :   0 wdr   :   0 
-Instructions used: 27 out of 113 (23.9%)
+Instructions used: 28 out of 113 (24.8%)
 
 "ATmega328P" memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x0003ca    930      0    930   32768   2.8%
+[.cseg] 0x000000 0x000440   1048      0   1048   32768   3.2%
 [.dseg] 0x000100 0x000100      0      0      0    2048   0.0%
 [.eseg] 0x000000 0x000000      0      0      0    1024   0.0%
 
